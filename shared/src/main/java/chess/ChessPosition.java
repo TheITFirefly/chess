@@ -32,7 +32,7 @@ public class ChessPosition {
     }
     @Override
     public String toString() {
-        return "lol";
+        return String.format("(%d,%d)",row,col);
     }
 
     @Override
