@@ -30,7 +30,6 @@ public class ChessPosition {
     public int getColumn() {
         return col;
     }
-    /* Need to override tostring, hashcode, equals */
     @Override
     public String toString() {
         return "lol";
@@ -38,10 +37,7 @@ public class ChessPosition {
 
     @Override
     public int hashCode() {
-        int hash = 3;
-        hash = hash * 5 + row;
-        hash = hash * 5 + col;
-        return hash;
+        return Integer.parseInt(Integer.toString(row)+Integer.toString(col));
     }
 
     @Override
