@@ -20,7 +20,7 @@ public class ChessPosition {
      * 1 codes for the bottom row
      */
     public int getRow() {
-        return this.row;
+        return row;
     }
 
     /**
@@ -28,7 +28,28 @@ public class ChessPosition {
      * 1 codes for the left row
      */
     public int getColumn() {
-        return this.col;
+        return col;
+    }
+    /* Need to override tostring, hashcode, equals */
+    @Override
+    public String toString() {
+        return "lol";
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 3;
+        hash = hash * 5 + row;
+        hash = hash * 5 + col;
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+        ChessPosition objComp = (ChessPosition) obj;
+        return getRow() == objComp.getRow() && getColumn() == objComp.getColumn();
     }
 }
-/* Need to override tostring, hashcode, equals */
