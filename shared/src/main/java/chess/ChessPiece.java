@@ -29,14 +29,6 @@ public class ChessPiece {
         PAWN
     }
 
-    /*
-     * The various different chess team colors
-     */
-    public enum TeamColor {
-        WHITE,
-        BLACK
-    }
-
     /**
      * @return Which team this chess piece belongs to
      */
