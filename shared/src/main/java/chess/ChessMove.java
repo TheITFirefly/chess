@@ -69,22 +69,15 @@ public class ChessMove {
         if (getPromotionPiece() == null) {
             return Integer.parseInt(Integer.toString(retValue)+Integer.toString(0));
         }
-        switch (getPromotionPiece()) {
-            case KING:                
-                return Integer.parseInt(Integer.toString(retValue)+Integer.toString(1));
-            case QUEEN:
-                return Integer.parseInt(Integer.toString(retValue)+Integer.toString(2));
-            case BISHOP:
-                return Integer.parseInt(Integer.toString(retValue)+Integer.toString(3));
-            case KNIGHT:
-                return Integer.parseInt(Integer.toString(retValue)+Integer.toString(4));
-            case ROOK:
-                return Integer.parseInt(Integer.toString(retValue)+Integer.toString(5));
-            case PAWN:
-                return Integer.parseInt(Integer.toString(retValue)+Integer.toString(6));
-            default:
-                return Integer.parseInt(Integer.toString(retValue)+Integer.toString(7));
-        }
+        return switch (getPromotionPiece()) {
+            case KING -> Integer.parseInt(Integer.toString(retValue) + Integer.toString(1));
+            case QUEEN -> Integer.parseInt(Integer.toString(retValue) + Integer.toString(2));
+            case BISHOP -> Integer.parseInt(Integer.toString(retValue) + Integer.toString(3));
+            case KNIGHT -> Integer.parseInt(Integer.toString(retValue) + Integer.toString(4));
+            case ROOK -> Integer.parseInt(Integer.toString(retValue) + Integer.toString(5));
+            case PAWN -> Integer.parseInt(Integer.toString(retValue) + Integer.toString(6));
+            default -> Integer.parseInt(Integer.toString(retValue) + Integer.toString(7));
+        };
     }
 
     @Override public boolean equals(Object obj) {
