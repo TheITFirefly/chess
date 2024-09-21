@@ -11,8 +11,12 @@ import java.util.Objects;
  */
 public class ChessBoard {
     private ChessPiece[][] board = new ChessPiece[8][8];
-    public ChessBoard() {
-        resetBoard();
+
+    //Doesn't need to do anything?
+    public ChessBoard() {}
+
+    public ChessPiece[][] getBoard() {
+        return board;
     }
 
     /**
@@ -84,6 +88,8 @@ public class ChessBoard {
             for (int column = 0; column < 8; column++) {
                 if (board[row][column] != null) {
                     retString.append(board[row][column].toString());
+                } else {
+                    retString.append(".");
                 }
             }
             retString.append("\n");
