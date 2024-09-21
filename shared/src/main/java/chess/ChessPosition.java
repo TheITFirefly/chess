@@ -37,7 +37,7 @@ public class ChessPosition {
 
     @Override
     public int hashCode() {
-        return Integer.parseInt(Integer.toString(row)+Integer.toString(col));
+        return Integer.parseInt(row +String.valueOf(col));
     }
 
     @Override
