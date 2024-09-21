@@ -52,18 +52,27 @@ public class ChessPiece {
      * @return Collection of valid moves
      */
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
-        throw new RuntimeException("Not implemented");
+        MoveRule moveSet;
+        moveSet = switch (pType) {
+            case KING -> new KingMoveRule();
+            case QUEEN -> new QueenMoveRule();
+            case BISHOP -> new BishopMoveRule();
+            case KNIGHT -> new KnightMoveRule();
+            case ROOK -> new RookMoveRule();
+            case PAWN -> new PawnMoveRule();
+        };
+        return moveSet.validMoves(board,myPosition);
     }
 
     @Override
     public String toString() {
         String retString = "";
-        if (pColor == ChessGame.TeamColor.BLACK) {
+        if (pColor == ChessGame.TeamColor.WHITE) {
             return switch (pType) {
                 case KING -> retString + "K,";
                 case QUEEN -> retString + "Q,";
                 case BISHOP -> retString + "B,";
-                case KNIGHT -> retString + "Kn,";
+                case KNIGHT -> retString + "KN,";
                 case ROOK -> retString + "R,";
                 case PAWN -> retString + "P,";
                 default -> retString + "NULL";
