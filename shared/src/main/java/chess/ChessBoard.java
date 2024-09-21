@@ -12,12 +12,8 @@ import java.util.Objects;
 public class ChessBoard {
     private ChessPiece[][] board = new ChessPiece[8][8];
 
-    //Doesn't need to do anything?
+    //Doesn't need to do anything
     public ChessBoard() {}
-
-    public ChessPiece[][] getBoard() {
-        return board;
-    }
 
     /**
      * Adds a chess piece to the chessboard
