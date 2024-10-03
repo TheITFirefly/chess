@@ -46,6 +46,28 @@ public class ChessBoard {
     }
 
     /**
+     * Move a piece on the board
+     *
+     * @param move move that will be made on the board
+     */
+    public void movePiece(ChessMove move) {
+        if (getPiece(move.getStartPosition()) != null) {
+            ChessGame.TeamColor teamColor = getPiece(move.getStartPosition()).getTeamColor();
+            if (move.getPromotionPiece()!= null) {
+                ChessPiece.PieceType pieceType = move.getPromotionPiece();
+                removePiece(move.getStartPosition());
+                addPiece(move.getEndPosition(),new ChessPiece(teamColor,pieceType));
+            } else {
+                ChessPiece.PieceType pieceType = getPiece(move.getStartPosition()).getPieceType();
+                removePiece(move.getStartPosition());
+                addPiece(move.getEndPosition(),new ChessPiece(teamColor,pieceType));
+            }
+        } else {
+            // something weird happened. Throw an exception?
+        }
+    }
+
+    /**
      * Sets the board to the default starting board
      * (How the game of chess normally starts)
      */
