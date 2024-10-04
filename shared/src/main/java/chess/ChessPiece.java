@@ -79,12 +79,12 @@ public class ChessPiece {
             };
         }
         return switch (pType) {
-            case KING -> retString + "k,";
-            case QUEEN -> retString + "q,";
-            case BISHOP -> retString + "b,";
-            case KNIGHT -> retString + "kn,";
-            case ROOK -> retString + "r,";
-            case PAWN -> retString + "p,";
+            case KING -> retString + "k";
+            case QUEEN -> retString + "q";
+            case BISHOP -> retString + "b";
+            case KNIGHT -> retString + "kn";
+            case ROOK -> retString + "r";
+            case PAWN -> retString + "p";
             default -> retString + "null";
         };
     }
