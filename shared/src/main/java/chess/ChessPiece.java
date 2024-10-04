@@ -69,12 +69,12 @@ public class ChessPiece {
         String retString = "";
         if (pColor == ChessGame.TeamColor.WHITE) {
             return switch (pType) {
-                case KING -> retString + "K,";
-                case QUEEN -> retString + "Q,";
-                case BISHOP -> retString + "B,";
-                case KNIGHT -> retString + "KN,";
-                case ROOK -> retString + "R,";
-                case PAWN -> retString + "P,";
+                case KING -> retString + "K";
+                case QUEEN -> retString + "Q";
+                case BISHOP -> retString + "B";
+                case KNIGHT -> retString + "KN";
+                case ROOK -> retString + "R";
+                case PAWN -> retString + "P";
                 default -> retString + "NULL";
             };
         }
