@@ -233,9 +233,162 @@ public class ChessGame {
         if (isInCheck(teamColor)) {
             ChessPosition kingPos = locateKing(teamColor);
             Collection<ChessMove> kingPieceMoves = validMoves(kingPos);
-            return kingPieceMoves.isEmpty();
+            if (kingPieceMoves.isEmpty()) {
+                // Some other piece may be able to capture the checking piece
+                Collection<ChessPosition> checkingPieces = locateCheckingPieces(teamColor);
+                if (checkingPieces.size() > 1) {
+                    return true;
+                }
+                for (ChessPosition checkingPiecePos : checkingPieces) {
+                    // if piece is capturable
+                    ChessPiece capturablePiece = gameBoard.getPiece(checkingPiecePos);
+                    TeamColor opposingColor = capturablePiece.getTeamColor();
+                    // Assume the capturable piece is a knight
+                    gameBoard.addPiece(checkingPiecePos,new ChessPiece(opposingColor, ChessPiece.PieceType.KNIGHT));
+                    Collection<ChessMove> knightMoves = gameBoard.getPiece(checkingPiecePos).pieceMoves(gameBoard,checkingPiecePos);
+                    for (ChessMove move : knightMoves) {
+                        if (gameBoard.getPiece(move.getEndPosition()) != null && gameBoard.getPiece(move.getEndPosition()).getPieceType() == ChessPiece.PieceType.KNIGHT && gameBoard.getPiece(move.getEndPosition()).getTeamColor() == teamColor) {
+                            gameBoard.addPiece(checkingPiecePos,capturablePiece);
+                            return false;
+                        }
+                    }
+                    // Assume the capturable piece is a rook
+                    gameBoard.addPiece(checkingPiecePos,new ChessPiece(opposingColor, ChessPiece.PieceType.ROOK));
+                    Collection<ChessMove> rookMoves = gameBoard.getPiece(checkingPiecePos).pieceMoves(gameBoard,checkingPiecePos);
+                    for (ChessMove move : rookMoves) {
+                        if (gameBoard.getPiece(move.getEndPosition()) != null && gameBoard.getPiece(move.getEndPosition()).getPieceType() == ChessPiece.PieceType.ROOK && gameBoard.getPiece(move.getEndPosition()).getTeamColor() == teamColor) {
+                            gameBoard.addPiece(checkingPiecePos,capturablePiece);
+                            return false;
+                        }
+                    }
+                    // Assume the capturable piece is a bishop
+                    gameBoard.addPiece(checkingPiecePos,new ChessPiece(opposingColor, ChessPiece.PieceType.BISHOP));
+                    Collection<ChessMove> bishopMoves = gameBoard.getPiece(checkingPiecePos).pieceMoves(gameBoard,checkingPiecePos);
+                    for (ChessMove move : bishopMoves) {
+                        if (gameBoard.getPiece(move.getEndPosition()) != null && gameBoard.getPiece(move.getEndPosition()).getPieceType() == ChessPiece.PieceType.BISHOP && gameBoard.getPiece(move.getEndPosition()).getTeamColor() == teamColor) {
+                            gameBoard.addPiece(checkingPiecePos,capturablePiece);
+                            return false;
+                        }
+                    }
+                    // Can a pawn take?
+                    return true;
+                }
+            }
         }
         return false;
+    }
+
+    /**
+     * returns positions of pieces that are currently checking the king
+     *
+     * @param teamColor teamColor of king in check
+     */
+    public Collection<ChessPosition> locateCheckingPieces(TeamColor teamColor) {
+        Collection<ChessPosition> checkingPieces = new ArrayList<>();
+        if (!isInCheck(teamColor)) {
+            return checkingPieces;
+        }
+        ChessPosition kingPos = locateKing(teamColor);
+        if (kingPos == null) {
+            return checkingPieces;
+        }
+        ChessPiece kingPiece;
+        // Assume the king is now a knight. If the king has a valid move to a knight of opposite color, he is in check
+        kingPiece = new ChessPiece(teamColor, ChessPiece.PieceType.KNIGHT);
+        gameBoard.addPiece(kingPos,kingPiece);
+        Collection<ChessMove> knightMoves = gameBoard.getPiece(kingPos).pieceMoves(gameBoard,kingPos);
+        for (ChessMove move : knightMoves) {
+            ChessPiece possibleAttacker = gameBoard.getPiece(move.getEndPosition());
+            if (possibleAttacker != null) {
+                if (possibleAttacker.getTeamColor() != teamColor && possibleAttacker.getPieceType() == ChessPiece.PieceType.KNIGHT) {
+                    gameBoard.addPiece(kingPos,new ChessPiece(teamColor, ChessPiece.PieceType.KING));
+                    checkingPieces.add(move.getEndPosition());
+                }
+            }
+        }
+        // Ensure the king is put back in place
+        gameBoard.addPiece(kingPos,new ChessPiece(teamColor, ChessPiece.PieceType.KING));
+        // Assume the king is a bishop. If the king has a valid move to a bishop of opposite color, he is in check
+        kingPiece = new ChessPiece(teamColor, ChessPiece.PieceType.BISHOP);
+        gameBoard.addPiece(kingPos,kingPiece);
+        Collection<ChessMove> bishopMoves = gameBoard.getPiece(kingPos).pieceMoves(gameBoard,kingPos);
+        for (ChessMove move : bishopMoves) {
+            ChessPiece possibleAttacker = gameBoard.getPiece(move.getEndPosition());
+            if (possibleAttacker != null) {
+                if (possibleAttacker.getTeamColor() != teamColor && (possibleAttacker.getPieceType() == ChessPiece.PieceType.BISHOP || possibleAttacker.getPieceType() == ChessPiece.PieceType.QUEEN)) {
+                    gameBoard.addPiece(kingPos,new ChessPiece(teamColor, ChessPiece.PieceType.KING));
+                    checkingPieces.add(move.getEndPosition());
+                }
+            }
+        }
+        // Ensure the king is put back in place
+        gameBoard.addPiece(kingPos,new ChessPiece(teamColor, ChessPiece.PieceType.KING));
+        // Assume the king is a rook. If the king has a valid move to a rook of opposite color, he is in check
+        kingPiece = new ChessPiece(teamColor, ChessPiece.PieceType.ROOK);
+        gameBoard.addPiece(kingPos,kingPiece);
+        Collection<ChessMove> rookMoves = gameBoard.getPiece(kingPos).pieceMoves(gameBoard,kingPos);
+        for (ChessMove move : rookMoves) {
+            ChessPiece possibleAttacker = gameBoard.getPiece(move.getEndPosition());
+            if (possibleAttacker != null) {
+                if (possibleAttacker.getTeamColor() != teamColor && (possibleAttacker.getPieceType() == ChessPiece.PieceType.ROOK || possibleAttacker.getPieceType() == ChessPiece.PieceType.QUEEN)) {
+                    gameBoard.addPiece(kingPos,new ChessPiece(teamColor, ChessPiece.PieceType.KING));
+                    checkingPieces.add(move.getEndPosition());
+                }
+            }
+        }
+        // Ensure the king is put back in place
+        gameBoard.addPiece(kingPos,new ChessPiece(teamColor, ChessPiece.PieceType.KING));
+        // 2 above cases cover queens
+        // King is in check if there is a pawn in either of the positions diagonal to the king, assuming they aren't out of bounds
+        if (teamColor == TeamColor.WHITE) {
+            ChessPosition leftPawn = new ChessPosition(kingPos.getRow()+1, kingPos.getColumn()-1);
+            ChessPosition rightPawn = new ChessPosition(kingPos.getRow()+1, kingPos.getColumn()+1);
+            if (1 <= leftPawn.getRow() && leftPawn.getRow()<=8) {
+                if (1 <= leftPawn.getColumn() && leftPawn.getColumn() <= 8) {
+                    if (gameBoard.getPiece(leftPawn) != null && gameBoard.getPiece(leftPawn).getPieceType() == ChessPiece.PieceType.PAWN && gameBoard.getPiece(leftPawn).getTeamColor() != teamColor) {
+                        checkingPieces.add(leftPawn);
+                    }
+                }
+                if (1 <= rightPawn.getColumn() && rightPawn.getColumn() <= 8) {
+                    if (gameBoard.getPiece(rightPawn) != null && gameBoard.getPiece(rightPawn).getPieceType() == ChessPiece.PieceType.PAWN && gameBoard.getPiece(rightPawn).getTeamColor() != teamColor) {
+                        checkingPieces.add(rightPawn);
+                    }
+                }
+            }
+        } else {
+            ChessPosition leftPawn = new ChessPosition(kingPos.getRow() - 1, kingPos.getColumn() - 1);
+            ChessPosition rightPawn = new ChessPosition(kingPos.getRow() - 1, kingPos.getColumn() + 1);
+            if (1<=rightPawn.getRow()&&rightPawn.getRow()<=8) {
+                if (1 <= leftPawn.getColumn() && leftPawn.getColumn() <= 8) {
+                    if (gameBoard.getPiece(leftPawn) != null && gameBoard.getPiece(leftPawn).getPieceType() == ChessPiece.PieceType.PAWN && gameBoard.getPiece(leftPawn).getTeamColor() != teamColor) {
+                        checkingPieces.add(leftPawn);
+                    }
+                }
+                if (1 <= rightPawn.getColumn() && rightPawn.getColumn() <= 8) {
+                    if (gameBoard.getPiece(rightPawn) != null && gameBoard.getPiece(rightPawn).getPieceType() == ChessPiece.PieceType.PAWN && gameBoard.getPiece(rightPawn).getTeamColor() != teamColor) {
+                        checkingPieces.add(rightPawn);
+                    }
+                }
+            }
+        }
+        // Ensure the king is put back in place
+        gameBoard.addPiece(kingPos,new ChessPiece(teamColor, ChessPiece.PieceType.KING));
+        // Find the opposing king with findKing
+        TeamColor opposingColor = (teamColor == TeamColor.WHITE) ? TeamColor.BLACK : TeamColor.WHITE;
+        ChessPosition opposingKingPos = locateKing(opposingColor);
+        if (opposingKingPos == null) {
+            return checkingPieces;
+        }
+        ChessPiece opposingKingPiece = gameBoard.getPiece(opposingKingPos);
+        // Check if the opposing king can move to the current king's position
+        Collection<ChessMove> opposingKingMoves = opposingKingPiece.pieceMoves(gameBoard, opposingKingPos);
+        for (ChessMove move : opposingKingMoves) {
+            if (move.getEndPosition().equals(kingPos)) {
+                checkingPieces.add(opposingKingPos);
+                return checkingPieces;
+            }
+        }
+        return checkingPieces;
     }
 
     /**
