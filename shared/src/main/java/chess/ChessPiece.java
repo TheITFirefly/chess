@@ -72,7 +72,7 @@ public class ChessPiece {
                 case KING -> retString + "K";
                 case QUEEN -> retString + "Q";
                 case BISHOP -> retString + "B";
-                case KNIGHT -> retString + "KN";
+                case KNIGHT -> retString + "N";
                 case ROOK -> retString + "R";
                 case PAWN -> retString + "P";
                 default -> retString + "NULL";
@@ -82,7 +82,7 @@ public class ChessPiece {
             case KING -> retString + "k";
             case QUEEN -> retString + "q";
             case BISHOP -> retString + "b";
-            case KNIGHT -> retString + "kn";
+            case KNIGHT -> retString + "n";
             case ROOK -> retString + "r";
             case PAWN -> retString + "p";
             default -> retString + "null";
