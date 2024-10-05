@@ -84,6 +84,7 @@ public class ChessGame {
                 // Return pieces to original position
                 gameBoard.movePiece(new ChessMove(move.getEndPosition(),move.getStartPosition(),move.getPromotionPiece()));
                 gameBoard.addPiece(move.getEndPosition(),endPositionPiece);
+                endPositionPiece = null;
             }
             return goodMoves;
         }
