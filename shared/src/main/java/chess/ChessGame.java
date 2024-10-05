@@ -180,7 +180,20 @@ public class ChessGame {
             }
             // Ensure the king is put back in place
             gameBoard.addPiece(kingPos,new ChessPiece(teamColor, ChessPiece.PieceType.KING));
-
+            // Find the opposing king with findKing
+            TeamColor opposingColor = (teamColor == TeamColor.WHITE) ? TeamColor.BLACK : TeamColor.WHITE;
+            ChessPosition opposingKingPos = locateKing(opposingColor);
+            if (opposingKingPos == null) {
+                return false;
+            }
+            ChessPiece opposingKingPiece = gameBoard.getPiece(opposingKingPos);
+            // Check if the opposing king can move to the current king's position
+            Collection<ChessMove> opposingKingMoves = opposingKingPiece.pieceMoves(gameBoard, opposingKingPos);
+            for (ChessMove move : opposingKingMoves) {
+                if (move.getEndPosition().equals(kingPos)) {
+                    return true;
+                }
+            }
         return false;
     }
 
