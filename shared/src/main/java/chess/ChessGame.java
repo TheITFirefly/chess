@@ -12,10 +12,10 @@ import java.util.Collection;
 public class ChessGame {
     private ChessBoard gameBoard;
     private TeamColor currentTurn;
-    private boolean blackLRookUnmoved;
-    private boolean blackRRookUnmoved;
-    private boolean whiteLRookUnmoved;
-    private boolean whiteRRookUnmoved;
+    private boolean leftBlackRookUnmoved;
+    private boolean rightBlackRookUnmoved;
+    private boolean leftWhiteRookUnmoved;
+    private boolean rightWhiteRookUnmoved;
     private boolean blackKingUnmoved;
     private boolean whiteKingUnmoved;
 
@@ -24,11 +24,11 @@ public class ChessGame {
         gameBoard.resetBoard();
         setTeamTurn(TeamColor.WHITE);
         whiteKingUnmoved = true;
-        whiteLRookUnmoved = true;
-        whiteRRookUnmoved = true;
+        leftWhiteRookUnmoved = true;
+        rightWhiteRookUnmoved = true;
         blackKingUnmoved = true;
-        blackLRookUnmoved = true;
-        blackRRookUnmoved = true;
+        LeftBlackRookUnmoved = true;
+        rightBlackRookUnmoved = true;
     }
 
     /**
@@ -162,7 +162,12 @@ public class ChessGame {
                 ChessPosition rightPawn = new ChessPosition(kingPos.getRow()+1, kingPos.getColumn()+1);
                 if (leftPawn.getRow()<=8) {
                     if (1 <= leftPawn.getColumn() && leftPawn.getColumn() <= 8) {
-                        if (gameBoard.getPiece(leftPawn) != null && gameBoard.getPiece(leftPawn).getPieceType() == ChessPiece.PieceType.PAWN) {
+                        if (gameBoard.getPiece(leftPawn) != null && gameBoard.getPiece(leftPawn).getPieceType() == ChessPiece.PieceType.PAWN && gameBoard.getPiece(leftPawn).getTeamColor() != teamColor) {
+                            return true;
+                        }
+                    }
+                    if (1 <= rightPawn.getColumn() && rightPawn.getColumn() <= 8) {
+                        if (gameBoard.getPiece(rightPawn) != null && gameBoard.getPiece(rightPawn).getPieceType() == ChessPiece.PieceType.PAWN && gameBoard.getPiece(rightPawn).getTeamColor() != teamColor) {
                             return true;
                         }
                     }
@@ -171,8 +176,13 @@ public class ChessGame {
                 ChessPosition leftPawn = new ChessPosition(kingPos.getRow() - 1, kingPos.getColumn() - 1);
                 ChessPosition rightPawn = new ChessPosition(kingPos.getRow() - 1, kingPos.getColumn() + 1);
                 if (rightPawn.getRow()<=8) {
+                    if (1 <= leftPawn.getColumn() && leftPawn.getColumn() <= 8) {
+                        if (gameBoard.getPiece(leftPawn) != null && gameBoard.getPiece(leftPawn).getPieceType() == ChessPiece.PieceType.PAWN && gameBoard.getPiece(leftPawn).getTeamColor() != teamColor) {
+                            return true;
+                        }
+                    }
                     if (1 <= rightPawn.getColumn() && rightPawn.getColumn() <= 8) {
-                        if (gameBoard.getPiece(rightPawn) != null && gameBoard.getPiece(rightPawn).getPieceType() == ChessPiece.PieceType.PAWN) {
+                        if (gameBoard.getPiece(rightPawn) != null && gameBoard.getPiece(rightPawn).getPieceType() == ChessPiece.PieceType.PAWN && gameBoard.getPiece(rightPawn).getTeamColor() != teamColor) {
                             return true;
                         }
                     }
@@ -225,6 +235,42 @@ public class ChessGame {
      */
     public void setBoard(ChessBoard board) {
         gameBoard = board;
+        ChessPosition leftWhiteRookPos = new ChessPosition(1,1);
+        ChessPosition rightWhiteRookPos = new ChessPosition(1,8);
+        ChessPosition leftBlackRookPos = new ChessPosition(8,1);
+        ChessPosition rightBlackRookPos = new ChessPosition(8,8);
+        ChessPosition whiteKingPos = new ChessPosition(1,5);
+        ChessPosition blackKingPos = new ChessPosition(8,5);
+        if (locateKing(TeamColor.WHITE) != whiteKingPos) {
+            whiteKingUnmoved = false;
+        }
+        if (locateKing(TeamColor.BLACK) != blackKingPos) {
+            blackKingUnmoved = false;
+        }
+        ChessPiece leftWhiteRook = gameBoard.getPiece(leftWhiteRookPos);
+        if (leftWhiteRook == null) {
+            leftWhiteRookUnmoved = false;
+        } else if (leftWhiteRook.getTeamColor() != TeamColor.WHITE || leftWhiteRook.getPieceType() != ChessPiece.PieceType.ROOK) {
+            leftWhiteRookUnmoved = false;
+        }
+        ChessPiece rightWhiteRook = gameBoard.getPiece(rightWhiteRookPos);
+        if (rightWhiteRook == null) {
+            rightWhiteRookUnmoved = false;
+        } else if (rightWhiteRook.getTeamColor() != TeamColor.WHITE || rightWhiteRook.getPieceType() != ChessPiece.PieceType.ROOK) {
+            rightWhiteRookUnmoved = false;
+        }
+        ChessPiece leftBlackRook = gameBoard.getPiece(leftBlackRookPos);
+        if (leftBlackRook == null) {
+            leftBlackRookUnmoved = false;
+        } else if (leftBlackRook.getTeamColor() != TeamColor.WHITE || leftBlackRook.getPieceType() != ChessPiece.PieceType.ROOK) {
+            leftBlackRookUnmoved = false;
+        }
+        ChessPiece rightBlackRook = gameBoard.getPiece(leftWhiteRookPos);
+        if (rightBlackRook == null) {
+            rightBlackRookUnmoved = false;
+        } else if (rightBlackRook.getTeamColor() != TeamColor.WHITE || rightBlackRook.getPieceType() != ChessPiece.PieceType.ROOK) {
+            rightBlackRookUnmoved = false;
+        }
     }
 
     /**
