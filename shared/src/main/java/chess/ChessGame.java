@@ -121,6 +121,10 @@ public class ChessGame {
      */
     public boolean isInCheck(TeamColor teamColor) {
         ChessPosition kingPos = locateKing(teamColor);
+        if (kingPos == null) {
+            // King can't be in check if there is no king?
+            return false;
+        }
         ChessPiece kingPiece;
             // Assume the king is now a knight. If the king has a valid move to a knight of opposite color, he is in check
             kingPiece = new ChessPiece(teamColor, ChessPiece.PieceType.KNIGHT);
