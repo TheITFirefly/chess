@@ -399,7 +399,31 @@ public class ChessGame {
      * @return True if the specified team is in stalemate, otherwise false
      */
     public boolean isInStalemate(TeamColor teamColor) {
-        throw new RuntimeException("Not implemented");
+        if (isInCheck(teamColor) || isInCheckmate(teamColor)) {
+            return false;
+        }
+        // stalemate with 2 kings
+        int numPieces = 0;
+        for (int row = 1; row <=8 ; row++) {
+            for (int column = 1; column <=8 ; column++) {
+                if (gameBoard.getPiece(new ChessPosition(row,column))!= null) {
+                    numPieces++;
+                }
+            }
+        }
+        if (numPieces <= 2) {
+            return true;
+        }
+        for (int row = 1; row <=8 ; row++) {
+            for (int column = 1; column <=8 ; column++) {
+                if (gameBoard.getPiece(new ChessPosition(row,column)) != null && gameBoard.getPiece(new ChessPosition(row,column)).getTeamColor() == teamColor) {
+                    if (!validMoves(new ChessPosition(row, column)).isEmpty()) {
+                        return false;
+                    }
+                }
+            }
+        }
+        return true;
     }
 
     /**
