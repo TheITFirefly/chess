@@ -27,7 +27,7 @@ public class ChessGame {
         leftWhiteRookUnmoved = true;
         rightWhiteRookUnmoved = true;
         blackKingUnmoved = true;
-        LeftBlackRookUnmoved = true;
+        leftBlackRookUnmoved = true;
         rightBlackRookUnmoved = true;
     }
 
@@ -97,8 +97,20 @@ public class ChessGame {
      * @throws InvalidMoveException if move is invalid
      */
     public void makeMove(ChessMove move) throws InvalidMoveException {
+        ChessPiece movingPiece = gameBoard.getPiece(move.getStartPosition());
+        if (movingPiece == null) {
+            throw new InvalidMoveException();
+        } else if (movingPiece.getTeamColor() != currentTurn) {
+            throw new InvalidMoveException();
+        }
         // Get all good moves. Move it with movePiece if the move is in good moves for the start position. Else throw an exception
-        throw new RuntimeException("Not implemented");
+        Collection<ChessMove> validMoves = validMoves(move.getStartPosition());
+        if (validMoves != null && validMoves.contains(move)) {
+            gameBoard.movePiece(move);
+            setTeamTurn(currentTurn == TeamColor.WHITE ? TeamColor.BLACK : TeamColor.WHITE);
+        } else {
+            throw new InvalidMoveException();
+        }
     }
 
     /**
@@ -160,7 +172,7 @@ public class ChessGame {
             if (teamColor == TeamColor.WHITE) {
                 ChessPosition leftPawn = new ChessPosition(kingPos.getRow()+1, kingPos.getColumn()-1);
                 ChessPosition rightPawn = new ChessPosition(kingPos.getRow()+1, kingPos.getColumn()+1);
-                if (leftPawn.getRow()<=8) {
+                if (1 <= leftPawn.getRow() && leftPawn.getRow()<=8) {
                     if (1 <= leftPawn.getColumn() && leftPawn.getColumn() <= 8) {
                         if (gameBoard.getPiece(leftPawn) != null && gameBoard.getPiece(leftPawn).getPieceType() == ChessPiece.PieceType.PAWN && gameBoard.getPiece(leftPawn).getTeamColor() != teamColor) {
                             return true;
@@ -175,7 +187,7 @@ public class ChessGame {
             } else {
                 ChessPosition leftPawn = new ChessPosition(kingPos.getRow() - 1, kingPos.getColumn() - 1);
                 ChessPosition rightPawn = new ChessPosition(kingPos.getRow() - 1, kingPos.getColumn() + 1);
-                if (rightPawn.getRow()<=8) {
+                if (1<=rightPawn.getRow()&&rightPawn.getRow()<=8) {
                     if (1 <= leftPawn.getColumn() && leftPawn.getColumn() <= 8) {
                         if (gameBoard.getPiece(leftPawn) != null && gameBoard.getPiece(leftPawn).getPieceType() == ChessPiece.PieceType.PAWN && gameBoard.getPiece(leftPawn).getTeamColor() != teamColor) {
                             return true;
