@@ -15,7 +15,6 @@ public class PawnMoveRule implements MoveRule {
         boolean whitePossiblePromote = false;
         boolean checkLeft = false;
         boolean checkRight = false;
-
         if (currentColor == ChessGame.TeamColor.BLACK && position.getRow() == 7) {
             blackInitMove = true;
         } else if (currentColor == ChessGame.TeamColor.BLACK && position.getRow() == 2) {
@@ -32,7 +31,6 @@ public class PawnMoveRule implements MoveRule {
         if (position.getColumn() < 8 && position.getColumn()>=1) {
             checkRight = true;
         }
-
         if (blackInitMove) {
             if (board.getPiece(new ChessPosition(position.getRow()-1, position.getColumn())) == null) {
                 goodMoves.add(new ChessMove(position, new ChessPosition(position.getRow()-1, position.getColumn()), null));
@@ -43,7 +41,6 @@ public class PawnMoveRule implements MoveRule {
         } else if (currentColor == ChessGame.TeamColor.BLACK && !blackPossiblePromote && board.getPiece(new ChessPosition(position.getRow()-1, position.getColumn())) == null) {
             goodMoves.add(new ChessMove(position, new ChessPosition(position.getRow()-1, position.getColumn()), null));
         }
-
         if (blackPossiblePromote) {
             if (board.getPiece(new ChessPosition(position.getRow()-1, position.getColumn())) == null) {
                 goodMoves.add(new ChessMove(position,new ChessPosition(position.getRow()-1, position.getColumn()), ChessPiece.PieceType.QUEEN));
