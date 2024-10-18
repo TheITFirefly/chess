@@ -17,20 +17,12 @@ public class PawnMoveRule implements MoveRule {
         boolean checkRight = false;
         if (currentColor == ChessGame.TeamColor.BLACK && position.getRow() == 7) {
             blackInitMove = true;
-        } else if (currentColor == ChessGame.TeamColor.BLACK && position.getRow() == 2) {
-            blackPossiblePromote = true;
-        }
+        } else if (currentColor == ChessGame.TeamColor.BLACK && position.getRow() == 2) { blackPossiblePromote = true; }
         if (currentColor == ChessGame.TeamColor.WHITE && position.getRow() == 2) {
             whiteInitMove = true;
-        } else if (currentColor == ChessGame.TeamColor.WHITE && position.getRow() == 7) {
-            whitePossiblePromote = true;
-        }
-        if (position.getColumn() > 1 && position.getColumn()<=8) {
-            checkLeft = true;
-        }
-        if (position.getColumn() < 8 && position.getColumn()>=1) {
-            checkRight = true;
-        }
+        } else if (currentColor == ChessGame.TeamColor.WHITE && position.getRow() == 7) { whitePossiblePromote = true; }
+        if (position.getColumn() > 1 && position.getColumn()<=8) { checkLeft = true; }
+        if (position.getColumn() < 8 && position.getColumn()>=1) { checkRight = true; }
         if (blackInitMove) {
             if (board.getPiece(new ChessPosition(position.getRow()-1, position.getColumn())) == null) {
                 goodMoves.add(new ChessMove(position, new ChessPosition(position.getRow()-1, position.getColumn()), null));
@@ -56,9 +48,7 @@ public class PawnMoveRule implements MoveRule {
                     goodMoves.add(new ChessMove(position,new ChessPosition(position.getRow()-1,position.getColumn()-1), ChessPiece.PieceType.ROOK));
                     goodMoves.add(new ChessMove(position,new ChessPosition(position.getRow()-1,position.getColumn()-1), ChessPiece.PieceType.KNIGHT));
                     goodMoves.add(new ChessMove(position,new ChessPosition(position.getRow()-1,position.getColumn()-1), ChessPiece.PieceType.BISHOP));
-                } else {
-                    goodMoves.add(new ChessMove(position,new ChessPosition(position.getRow()-1,position.getColumn()-1),null));
-                }
+                } else { goodMoves.add(new ChessMove(position,new ChessPosition(position.getRow()-1,position.getColumn()-1),null)); }
             }
         }
         if (currentColor == ChessGame.TeamColor.BLACK && checkRight){
@@ -68,9 +58,7 @@ public class PawnMoveRule implements MoveRule {
                     goodMoves.add(new ChessMove(position,new ChessPosition(position.getRow()-1,position.getColumn()+1), ChessPiece.PieceType.ROOK));
                     goodMoves.add(new ChessMove(position,new ChessPosition(position.getRow()-1,position.getColumn()+1), ChessPiece.PieceType.KNIGHT));
                     goodMoves.add(new ChessMove(position,new ChessPosition(position.getRow()-1,position.getColumn()+1), ChessPiece.PieceType.BISHOP));
-                } else {
-                    goodMoves.add(new ChessMove(position,new ChessPosition(position.getRow()-1,position.getColumn()+1),null));
-                }
+                } else { goodMoves.add(new ChessMove(position,new ChessPosition(position.getRow()-1,position.getColumn()+1),null)); }
             }
         }
         if (whiteInitMove) {
@@ -98,9 +86,7 @@ public class PawnMoveRule implements MoveRule {
                     goodMoves.add(new ChessMove(position,new ChessPosition(position.getRow()+1,position.getColumn()-1), ChessPiece.PieceType.ROOK));
                     goodMoves.add(new ChessMove(position,new ChessPosition(position.getRow()+1,position.getColumn()-1), ChessPiece.PieceType.KNIGHT));
                     goodMoves.add(new ChessMove(position,new ChessPosition(position.getRow()+1,position.getColumn()-1), ChessPiece.PieceType.BISHOP));
-                } else {
-                    goodMoves.add(new ChessMove(position,new ChessPosition(position.getRow()+1,position.getColumn()-1),null));
-                }
+                } else { goodMoves.add(new ChessMove(position,new ChessPosition(position.getRow()+1,position.getColumn()-1),null)); }
             }
         }
         if (currentPiece.getTeamColor() == ChessGame.TeamColor.WHITE && checkRight) {
@@ -110,9 +96,7 @@ public class PawnMoveRule implements MoveRule {
                     goodMoves.add(new ChessMove(position,new ChessPosition(position.getRow()+1,position.getColumn()+1), ChessPiece.PieceType.ROOK));
                     goodMoves.add(new ChessMove(position,new ChessPosition(position.getRow()+1,position.getColumn()+1), ChessPiece.PieceType.KNIGHT));
                     goodMoves.add(new ChessMove(position,new ChessPosition(position.getRow()+1,position.getColumn()+1), ChessPiece.PieceType.BISHOP));
-                } else {
-                    goodMoves.add(new ChessMove(position,new ChessPosition(position.getRow()+1,position.getColumn()+1),null));
-                }
+                } else { goodMoves.add(new ChessMove(position,new ChessPosition(position.getRow()+1,position.getColumn()+1),null)); }
             }
         }
         return goodMoves;
