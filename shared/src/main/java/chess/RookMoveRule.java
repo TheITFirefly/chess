@@ -28,8 +28,7 @@ public class RookMoveRule implements MoveRule {
      * @param rowIncrement How the row changes per step (e.g., 0 for horizontal)
      * @param colIncrement How the column changes per step (e.g., 1 for right)
      */
-    private void checkDirection(ChessBoard board, ChessPosition start,
-                                List<ChessMove> moves, int rowIncrement, int colIncrement) {
+    private void checkDirection(ChessBoard board, ChessPosition start, List<ChessMove> moves, int rowIncrement, int colIncrement) {
         int row = start.getRow() + rowIncrement;
         int col = start.getColumn() + colIncrement;
 
@@ -52,8 +51,7 @@ public class RookMoveRule implements MoveRule {
      * @param moves The list to add valid moves to
      * @return true if the search should stop, false if it should continue
      */
-    private boolean isValidMove(ChessBoard board, ChessPosition start,
-                                ChessPosition checkPos, List<ChessMove> moves) {
+    private boolean isValidMove(ChessBoard board, ChessPosition start, ChessPosition checkPos, List<ChessMove> moves) {
         if (board.getPiece(checkPos) == null) {
             moves.add(new ChessMove(start, checkPos, null));
             return false; // Continue checking in this direction
