@@ -12,25 +12,11 @@ import java.util.Collection;
 public class ChessGame {
     private ChessBoard gameBoard;
     private TeamColor currentTurn;
-    private boolean leftBlackRookUnmoved;
-    private boolean rightBlackRookUnmoved;
-    private boolean leftWhiteRookUnmoved;
-    private boolean rightWhiteRookUnmoved;
-    private boolean blackKingUnmoved;
-    private boolean whiteKingUnmoved;
-    private boolean enPassantPossible;
-    private int enPassantColumn;
 
     public ChessGame() {
         gameBoard = new ChessBoard();
         gameBoard.resetBoard();
         setTeamTurn(TeamColor.WHITE);
-        whiteKingUnmoved = true;
-        leftWhiteRookUnmoved = true;
-        rightWhiteRookUnmoved = true;
-        blackKingUnmoved = true;
-        leftBlackRookUnmoved = true;
-        rightBlackRookUnmoved = true;
     }
 
     /**
@@ -69,27 +55,10 @@ public class ChessGame {
             return null;
         } else {
             Collection<ChessMove> goodMoves = new ArrayList<>();            // Castling tests
-            Collection<ChessMove> castlingMoves = new ArrayList<>();
-            // white left
-            if (whiteKingUnmoved && leftWhiteRookUnmoved) {
-                if (gameBoard.getPiece(new ChessPosition(1,4)) == null
-                        && gameBoard.getPiece(new ChessPosition(1,3)) == null
-                        && gameBoard.getPiece(new ChessPosition(1,2)) == null) {
-                    castlingMoves.add(new ChessMove(new ChessPosition(1,5),new ChessPosition(1,3),null));
-                }
-            }
-            // white right
-            // black left
-            // black right
-            // En passant test white
-            // En passant test black
-
-            // Track pieces so they can be moved back
             ChessPiece endPositionPiece = null;
             ChessPiece startPositionPiece = gameBoard.getPiece(startPosition);
             // Assume all moves are good to start
             Collection<ChessMove> possibleGoodMoves = startPositionPiece.pieceMoves(gameBoard,startPosition);
-            possibleGoodMoves.addAll(castlingMoves);
             for (ChessMove move : possibleGoodMoves) {
                 // Simulate a movement of the piece. Don't forget to save a piece if there is a capture
                 if (gameBoard.getPiece(move.getEndPosition()) != null) {
@@ -450,24 +419,6 @@ public class ChessGame {
      */
     public void setBoard(ChessBoard board) {
         gameBoard = board;
-        ChessPosition leftWhiteRookStartSquare = new ChessPosition(1,1);
-        ChessPosition rightWhiteRookStartSquare = new ChessPosition(1,8);
-        ChessPosition leftBlackRookStartSquare = new ChessPosition(8,1);
-        ChessPosition rightBlackRookStartSquare = new ChessPosition(8,8);
-        ChessPosition whiteKingStartSquare = new ChessPosition(1,5);
-        ChessPosition blackKingStartSquare = new ChessPosition(8,5);
-        ChessPosition whiteKingLoc = locateKing(TeamColor.WHITE);
-        ChessPosition blackKingLoc = locateKing(TeamColor.BLACK);
-        ChessPiece leftWhiteRook = board.getPiece(leftWhiteRookStartSquare);
-        ChessPiece rightWhiteRook = board.getPiece(leftWhiteRookStartSquare);
-        ChessPiece leftBlackRook = board.getPiece(leftWhiteRookStartSquare);
-        ChessPiece rightBlackRook = board.getPiece(leftWhiteRookStartSquare);
-        whiteKingUnmoved = whiteKingLoc != null && whiteKingLoc.equals(whiteKingStartSquare);
-        blackKingUnmoved = blackKingLoc != null && blackKingLoc.equals(blackKingStartSquare);
-        leftWhiteRookUnmoved = leftWhiteRook != null; // still need to check it is a rook of the correct color on that square
-        rightWhiteRookUnmoved = rightWhiteRook != null;
-        leftBlackRookUnmoved = leftBlackRook != null;
-        rightBlackRookUnmoved = rightBlackRook != null;
     }
 
     /**
