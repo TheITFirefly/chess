@@ -10,77 +10,62 @@ public class KingMoveRule implements MoveRule {
         ChessPosition checkPos;
         //Check up and to the left of the king
         checkPos = new ChessPosition(position.getRow()+1, position.getColumn()-1);
-        if (checkPos.getRow() >= 1 &&checkPos.getRow() <= 8 && checkPos.getColumn() >=1 && checkPos.getColumn() <= 8) {
-            if (board.getPiece(checkPos) == null) {
-                goodMoves.add(new ChessMove(position,checkPos,null));
-            } else if (board.getPiece(checkPos).getTeamColor() != board.getPiece(position).getTeamColor()) {
-                goodMoves.add(new ChessMove(position,checkPos,null));
-            }
+        if (moveValid(board,position,checkPos)) {
+            goodMoves.add(new ChessMove(position,checkPos,null));
         }
-        //Check up of the king
         checkPos = new ChessPosition(position.getRow()+1, position.getColumn());
-        if (checkPos.getRow() >= 1 &&checkPos.getRow() <= 8 && checkPos.getColumn() >=1 && checkPos.getColumn() <= 8) {
-            if (board.getPiece(checkPos) == null) {
-                goodMoves.add(new ChessMove(position,checkPos,null));
-            } else if (board.getPiece(checkPos).getTeamColor() != board.getPiece(position).getTeamColor()) {
-                goodMoves.add(new ChessMove(position,checkPos,null));
-            }
+        if (moveValid(board,position,checkPos)) {
+            goodMoves.add(new ChessMove(position,checkPos,null));
         }
-        //Check up and to the right of the king
         checkPos = new ChessPosition(position.getRow()+1, position.getColumn()+1);
-        if (checkPos.getRow() >= 1 &&checkPos.getRow() <= 8 && checkPos.getColumn() >=1 && checkPos.getColumn() <= 8) {
-            if (board.getPiece(checkPos) == null) {
-                goodMoves.add(new ChessMove(position,checkPos,null));
-            } else if (board.getPiece(checkPos).getTeamColor() != board.getPiece(position).getTeamColor()) {
-                goodMoves.add(new ChessMove(position,checkPos,null));
-            }
+        if (moveValid(board,position,checkPos)) {
+            goodMoves.add(new ChessMove(position,checkPos,null));
         }
-        //Check to the left of the king
         checkPos = new ChessPosition(position.getRow(), position.getColumn()-1);
-        if (checkPos.getRow() >= 1 &&checkPos.getRow() <= 8 && checkPos.getColumn() >=1 && checkPos.getColumn() <= 8) {
-            if (board.getPiece(checkPos) == null) {
-                goodMoves.add(new ChessMove(position,checkPos,null));
-            } else if (board.getPiece(checkPos).getTeamColor() != board.getPiece(position).getTeamColor()) {
-                goodMoves.add(new ChessMove(position,checkPos,null));
-            }
+        if (moveValid(board,position,checkPos)) {
+            goodMoves.add(new ChessMove(position,checkPos,null));
         }
-        //Check to the right of the king
         checkPos = new ChessPosition(position.getRow(), position.getColumn()+1);
-        if (checkPos.getRow() >= 1 &&checkPos.getRow() <= 8 && checkPos.getColumn() >=1 && checkPos.getColumn() <= 8) {
-            if (board.getPiece(checkPos) == null) {
-                goodMoves.add(new ChessMove(position,checkPos,null));
-            } else if (board.getPiece(checkPos).getTeamColor() != board.getPiece(position).getTeamColor()) {
-                goodMoves.add(new ChessMove(position,checkPos,null));
-            }
+        if (moveValid(board,position,checkPos)) {
+            goodMoves.add(new ChessMove(position,checkPos,null));
         }
-        //Check down and to the left of the king
         checkPos = new ChessPosition(position.getRow()-1, position.getColumn()-1);
-        if (checkPos.getRow() >= 1 &&checkPos.getRow() <= 8 && checkPos.getColumn() >=1 && checkPos.getColumn() <= 8) {
-            if (board.getPiece(checkPos) == null) {
-                goodMoves.add(new ChessMove(position,checkPos,null));
-            } else if (board.getPiece(checkPos).getTeamColor() != board.getPiece(position).getTeamColor()) {
-                goodMoves.add(new ChessMove(position,checkPos,null));
-            }
+        if (moveValid(board,position,checkPos)) {
+            goodMoves.add(new ChessMove(position,checkPos,null));
         }
-        //Check down of the king
         checkPos = new ChessPosition(position.getRow()-1, position.getColumn());
-        if (checkPos.getRow() >= 1 &&checkPos.getRow() <= 8 && checkPos.getColumn() >=1 && checkPos.getColumn() <= 8) {
-            if (board.getPiece(checkPos) == null) {
-                goodMoves.add(new ChessMove(position,checkPos,null));
-            } else if (board.getPiece(checkPos).getTeamColor() != board.getPiece(position).getTeamColor()) {
-                goodMoves.add(new ChessMove(position,checkPos,null));
-            }
+        if (moveValid(board,position,checkPos)) {
+            goodMoves.add(new ChessMove(position,checkPos,null));
         }
-        //Check down and to the right of the king
         checkPos = new ChessPosition(position.getRow()-1, position.getColumn()+1);
-        if (checkPos.getRow() >= 1 &&checkPos.getRow() <= 8 && checkPos.getColumn() >=1 && checkPos.getColumn() <= 8) {
-            if (board.getPiece(checkPos) == null) {
-                goodMoves.add(new ChessMove(position,checkPos,null));
-            } else if (board.getPiece(checkPos).getTeamColor() != board.getPiece(position).getTeamColor()) {
-                goodMoves.add(new ChessMove(position,checkPos,null));
-            }
+        if (moveValid(board,position,checkPos)) {
+            goodMoves.add(new ChessMove(position,checkPos,null));
         }
 
         return goodMoves;
+    }
+
+    private boolean moveValid(ChessBoard board, ChessPosition position, ChessPosition checkPos) {
+        // Check if the position is within the board limits (1 to 8 for both rows and columns)
+        if (checkPos.getRow() < 1 || checkPos.getRow() > 8 || checkPos.getColumn() < 1 || checkPos.getColumn() > 8) {
+            return false; // Move is out of bounds
+        }
+
+        // Get the piece at the target position (if any)
+        ChessPiece targetPiece = board.getPiece(checkPos);
+        ChessPiece currentPiece = board.getPiece(position); // The king piece
+
+        // If the target square is empty, it's a valid move
+        if (targetPiece == null) {
+            return true;
+        }
+
+        // If the target square contains a piece of the same color, it's not a valid move
+        if (targetPiece.getTeamColor() == currentPiece.getTeamColor()) {
+            return false;
+        }
+
+        // If the target square contains an opponent's piece, it's a valid capture
+        return true;
     }
 }
