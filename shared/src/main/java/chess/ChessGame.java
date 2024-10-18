@@ -1,6 +1,5 @@
 package chess;
 
-import java.net.CookieHandler;
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -80,28 +79,8 @@ public class ChessGame {
                 }
             }
             // white right
-            if (whiteKingUnmoved && rightWhiteRookUnmoved) {
-                if (gameBoard.getPiece(new ChessPosition(1,6)) == null
-                        && gameBoard.getPiece(new ChessPosition(1,7)) == null) {
-                    castlingMoves.add(new ChessMove(new ChessPosition(1,5),new ChessPosition(1,7),null));
-                }
-            }
             // black left
-            if (blackKingUnmoved && leftBlackRookUnmoved) {
-                if (gameBoard.getPiece(new ChessPosition(8,4)) == null
-                        && gameBoard.getPiece(new ChessPosition(8,3)) == null
-                        && gameBoard.getPiece(new ChessPosition(8,2)) == null) {
-                    castlingMoves.add(new ChessMove(new ChessPosition(8,5),new ChessPosition(8,3),null));
-                }
-            }
             // black right
-            if (blackKingUnmoved && rightBlackRookUnmoved) {
-                if (gameBoard.getPiece(new ChessPosition(8,6)) == null
-                        && gameBoard.getPiece(new ChessPosition(8,7)) == null) {
-                    castlingMoves.add(new ChessMove(new ChessPosition(8,5),new ChessPosition(8,7),null));
-                }
-            }
-
             // En passant test white
             // En passant test black
 
@@ -471,42 +450,24 @@ public class ChessGame {
      */
     public void setBoard(ChessBoard board) {
         gameBoard = board;
-        ChessPosition leftWhiteRookPos = new ChessPosition(1,1);
-        ChessPosition rightWhiteRookPos = new ChessPosition(1,8);
-        ChessPosition leftBlackRookPos = new ChessPosition(8,1);
-        ChessPosition rightBlackRookPos = new ChessPosition(8,8);
-        ChessPosition whiteKingPos = new ChessPosition(1,5);
-        ChessPosition blackKingPos = new ChessPosition(8,5);
-        if (locateKing(TeamColor.WHITE) != null && !locateKing(TeamColor.WHITE).equals(whiteKingPos)) {
-            whiteKingUnmoved = false;
-        }
-        if (locateKing(TeamColor.BLACK)!= null && !locateKing(TeamColor.BLACK).equals(blackKingPos)) {
-            blackKingUnmoved = false;
-        }
-        ChessPiece leftWhiteRook = gameBoard.getPiece(leftWhiteRookPos);
-        if (leftWhiteRook == null) {
-            leftWhiteRookUnmoved = false;
-        } else if (leftWhiteRook.getTeamColor() != TeamColor.WHITE || leftWhiteRook.getPieceType() != ChessPiece.PieceType.ROOK) {
-            leftWhiteRookUnmoved = false;
-        }
-        ChessPiece rightWhiteRook = gameBoard.getPiece(rightWhiteRookPos);
-        if (rightWhiteRook == null) {
-            rightWhiteRookUnmoved = false;
-        } else if (rightWhiteRook.getTeamColor() != TeamColor.WHITE || rightWhiteRook.getPieceType() != ChessPiece.PieceType.ROOK) {
-            rightWhiteRookUnmoved = false;
-        }
-        ChessPiece leftBlackRook = gameBoard.getPiece(leftBlackRookPos);
-        if (leftBlackRook == null) {
-            leftBlackRookUnmoved = false;
-        } else if (leftBlackRook.getTeamColor() != TeamColor.WHITE || leftBlackRook.getPieceType() != ChessPiece.PieceType.ROOK) {
-            leftBlackRookUnmoved = false;
-        }
-        ChessPiece rightBlackRook = gameBoard.getPiece(leftWhiteRookPos);
-        if (rightBlackRook == null) {
-            rightBlackRookUnmoved = false;
-        } else if (rightBlackRook.getTeamColor() != TeamColor.WHITE || rightBlackRook.getPieceType() != ChessPiece.PieceType.ROOK) {
-            rightBlackRookUnmoved = false;
-        }
+        ChessPosition leftWhiteRookStartSquare = new ChessPosition(1,1);
+        ChessPosition rightWhiteRookStartSquare = new ChessPosition(1,8);
+        ChessPosition leftBlackRookStartSquare = new ChessPosition(8,1);
+        ChessPosition rightBlackRookStartSquare = new ChessPosition(8,8);
+        ChessPosition whiteKingStartSquare = new ChessPosition(1,5);
+        ChessPosition blackKingStartSquare = new ChessPosition(8,5);
+        ChessPosition whiteKingLoc = locateKing(TeamColor.WHITE);
+        ChessPosition blackKingLoc = locateKing(TeamColor.BLACK);
+        ChessPiece leftWhiteRook = board.getPiece(leftWhiteRookStartSquare);
+        ChessPiece rightWhiteRook = board.getPiece(leftWhiteRookStartSquare);
+        ChessPiece leftBlackRook = board.getPiece(leftWhiteRookStartSquare);
+        ChessPiece rightBlackRook = board.getPiece(leftWhiteRookStartSquare);
+        whiteKingUnmoved = whiteKingLoc != null && whiteKingLoc.equals(whiteKingStartSquare);
+        blackKingUnmoved = blackKingLoc != null && blackKingLoc.equals(blackKingStartSquare);
+        leftWhiteRookUnmoved = leftWhiteRook != null; // still need to check it is a rook of the correct color on that square
+        rightWhiteRookUnmoved = rightWhiteRook != null;
+        leftBlackRookUnmoved = leftBlackRook != null;
+        rightBlackRookUnmoved = rightBlackRook != null;
     }
 
     /**
