@@ -89,7 +89,9 @@ public class ChessGame {
         } else if (movingPiece.getTeamColor() != currentTurn) {
             throw new InvalidMoveException();
         }
-        // Get all good moves. Move it with movePiece if the move is in good moves for the start position. Else throw an exception
+        // Get all good moves
+        // Move it with movePiece if the move is in good moves for the start position
+        // Else throw an exception
         Collection<ChessMove> validMoves = validMoves(move.getStartPosition());
         if (validMoves != null && validMoves.contains(move)) {
             gameBoard.movePiece(move);
