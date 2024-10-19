@@ -54,7 +54,7 @@ public class ChessGame {
         if (gameBoard.getPiece(startPosition) == null) {
             return null;
         } else {
-            Collection<ChessMove> goodMoves = new ArrayList<>();            // Castling tests
+            Collection<ChessMove> goodMoves = new ArrayList<>();
             ChessPiece endPositionPiece = null;
             ChessPiece startPositionPiece = gameBoard.getPiece(startPosition);
             Collection<ChessMove> possibleGoodMoves = startPositionPiece.pieceMoves(gameBoard,startPosition); // Assume all moves are good to start
@@ -228,7 +228,9 @@ public class ChessGame {
                     gameBoard.addPiece(checkingPiecePos,new ChessPiece(opposingColor, ChessPiece.PieceType.KNIGHT));
                     Collection<ChessMove> knightMoves = gameBoard.getPiece(checkingPiecePos).pieceMoves(gameBoard,checkingPiecePos);
                     for (ChessMove move : knightMoves) {
-                        if (gameBoard.getPiece(move.getEndPosition()) != null && gameBoard.getPiece(move.getEndPosition()).getPieceType() == ChessPiece.PieceType.KNIGHT && gameBoard.getPiece(move.getEndPosition()).getTeamColor() == teamColor) {
+                        if (gameBoard.getPiece(move.getEndPosition()) != null &&
+                                gameBoard.getPiece(move.getEndPosition()).getPieceType() == ChessPiece.PieceType.KNIGHT &&
+                                gameBoard.getPiece(move.getEndPosition()).getTeamColor() == teamColor) {
                             gameBoard.addPiece(checkingPiecePos,capturablePiece);
                             return false;
                         }
