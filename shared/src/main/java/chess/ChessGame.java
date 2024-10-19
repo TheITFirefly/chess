@@ -57,8 +57,7 @@ public class ChessGame {
             Collection<ChessMove> goodMoves = new ArrayList<>();            // Castling tests
             ChessPiece endPositionPiece = null;
             ChessPiece startPositionPiece = gameBoard.getPiece(startPosition);
-            // Assume all moves are good to start
-            Collection<ChessMove> possibleGoodMoves = startPositionPiece.pieceMoves(gameBoard,startPosition);
+            Collection<ChessMove> possibleGoodMoves = startPositionPiece.pieceMoves(gameBoard,startPosition); // Assume all moves are good to start
             for (ChessMove move : possibleGoodMoves) {
                 // Simulate a movement of the piece. Don't forget to save a piece if there is a capture
                 if (gameBoard.getPiece(move.getEndPosition()) != null) {
@@ -111,59 +110,29 @@ public class ChessGame {
         if (kingPos == null) {
             return false; // King can't be in check if there is no king? YEP
         }
-        ChessPiece kingPiece;
-        // Assume piece at king position is a knight, attacks knight of opposite color. If so, king is in check
-        if (attackedByPiece(kingPos, ChessPiece.PieceType.KNIGHT,teamColor)) {
+        // Check for attacks from other pieces
+        if (attackedByPiece(kingPos, ChessPiece.PieceType.KNIGHT, teamColor) ||
+                attackedByPiece(kingPos, ChessPiece.PieceType.ROOK, teamColor) ||
+                attackedByPiece(kingPos, ChessPiece.PieceType.BISHOP, teamColor) ||
+                attackedByPiece(kingPos, ChessPiece.PieceType.QUEEN, teamColor)) {
             return true;
         }
-        if (attackedByPiece(kingPos, ChessPiece.PieceType.ROOK,teamColor)) {
+
+        // Check for pawn attacks using attackedByPiece method
+        if (attackedByPiece(kingPos, ChessPiece.PieceType.PAWN, teamColor)) {
             return true;
         }
-        if (attackedByPiece(kingPos, ChessPiece.PieceType.BISHOP,teamColor)) {
-            return true;
-        }
-        if (attackedByPiece(kingPos, ChessPiece.PieceType.QUEEN,teamColor)) {
-            return true;
-        }
-        if (teamColor == TeamColor.WHITE) {
-            ChessPosition leftPawn = new ChessPosition(kingPos.getRow()+1, kingPos.getColumn()-1);
-            ChessPosition rightPawn = new ChessPosition(kingPos.getRow()+1, kingPos.getColumn()+1);
-            if (1 <= leftPawn.getRow() && leftPawn.getRow()<=8) {
-                if (1 <= leftPawn.getColumn() && leftPawn.getColumn() <= 8) {
-                    if (gameBoard.getPiece(leftPawn) != null && gameBoard.getPiece(leftPawn).getPieceType() == ChessPiece.PieceType.PAWN && gameBoard.getPiece(leftPawn).getTeamColor() != teamColor) {
-                            return true;
-                    }
-                }
-                if (1 <= rightPawn.getColumn() && rightPawn.getColumn() <= 8) {
-                    if (gameBoard.getPiece(rightPawn) != null && gameBoard.getPiece(rightPawn).getPieceType() == ChessPiece.PieceType.PAWN && gameBoard.getPiece(rightPawn).getTeamColor() != teamColor) {
-                        return true;
-                    }
-                }
-            }
-        } else {
-            ChessPosition leftPawn = new ChessPosition(kingPos.getRow() - 1, kingPos.getColumn() - 1);
-            ChessPosition rightPawn = new ChessPosition(kingPos.getRow() - 1, kingPos.getColumn() + 1);
-            if (1<=rightPawn.getRow()&&rightPawn.getRow()<=8) {
-                if (1 <= leftPawn.getColumn() && leftPawn.getColumn() <= 8) {
-                    if (gameBoard.getPiece(leftPawn) != null && gameBoard.getPiece(leftPawn).getPieceType() == ChessPiece.PieceType.PAWN && gameBoard.getPiece(leftPawn).getTeamColor() != teamColor) {
-                        return true;
-                    }
-                }
-                if (1 <= rightPawn.getColumn() && rightPawn.getColumn() <= 8) {
-                    if (gameBoard.getPiece(rightPawn) != null && gameBoard.getPiece(rightPawn).getPieceType() == ChessPiece.PieceType.PAWN && gameBoard.getPiece(rightPawn).getTeamColor() != teamColor) {
-                        return true;
-                    }
-                }
-            }
-        }
-        gameBoard.addPiece(kingPos,new ChessPiece(teamColor, ChessPiece.PieceType.KING)); // Ensure the king is put back in place
-        // Find the opposing king with findKing
+
+        gameBoard.addPiece(kingPos, new ChessPiece(teamColor, ChessPiece.PieceType.KING)); // Ensure the king is put back in place
+
+        // Find the opposing king
         TeamColor opposingColor = (teamColor == TeamColor.WHITE) ? TeamColor.BLACK : TeamColor.WHITE;
         ChessPosition opposingKingPos = locateKing(opposingColor);
         if (opposingKingPos == null) {
             return false;
         }
         ChessPiece opposingKingPiece = gameBoard.getPiece(opposingKingPos);
+
         // Check if the opposing king can move to the current king's position
         Collection<ChessMove> opposingKingMoves = opposingKingPiece.pieceMoves(gameBoard, opposingKingPos);
         for (ChessMove move : opposingKingMoves) {
@@ -171,8 +140,10 @@ public class ChessGame {
                 return true;
             }
         }
+
         return false;
     }
+
 
     /**
      * Determine if a piece is attacked by another piece that moves freely across the board
@@ -191,8 +162,32 @@ public class ChessGame {
         ChessPiece attackPiece;
         // Pawns are a special case since they don't move bidirectionally on the board
         if (pieceType == ChessPiece.PieceType.PAWN) {
-            // TODO: implement attack checks for pawns
-            return false;
+            // Determine the direction of the pawn's attack based on its color
+            int direction = (defendingColor == TeamColor.WHITE) ? 1 : -1; // 1 for white (attacks up), -1 for black (attacks down)
+            boolean badRow = 1 > checkPosition.getRow()+direction || checkPosition.getRow()+direction > 8;
+            if (badRow) {
+                return false;
+            }
+
+            boolean needLeftAttacker = (1 < checkPosition.getColumn() && checkPosition.getColumn() <= 8);
+            boolean needRightAttacker = 1 <= checkPosition.getColumn() && checkPosition.getColumn() < 8;
+            // Calculate the positions where the pawn can attack
+            ChessPosition leftAttackPosition = new ChessPosition(checkPosition.getRow()+direction, checkPosition.getColumn()-1);
+            ChessPosition rightAttackPosition = new ChessPosition(checkPosition.getRow()+direction,checkPosition.getColumn()+1);
+
+            // Check if there's an opposing piece at the left attack position
+            ChessPiece leftAttacker = null;
+            if (needLeftAttacker){leftAttacker = gameBoard.getPiece(leftAttackPosition);}
+            if (leftAttacker != null && leftAttacker.getTeamColor() != defendingColor) {
+                return true;
+            }
+
+            // Check if there's an opposing piece at the right attack position
+            ChessPiece rightAttacker = null;
+            if (needRightAttacker){
+                rightAttacker = gameBoard.getPiece(rightAttackPosition);
+            }
+            return rightAttacker != null && rightAttacker.getTeamColor() != defendingColor;// No opposing pieces can attack this position
         }
         attackPiece = new ChessPiece(defendingColor,pieceType);
         Collection<ChessMove> attackMoves = attackPiece.pieceMoves(gameBoard, checkPosition);
