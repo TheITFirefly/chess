@@ -211,55 +211,56 @@ public class ChessGame {
      * @return True if the specified team is in checkmate
      */
     public boolean isInCheckmate(TeamColor teamColor) {
-        if (isInCheck(teamColor)) {
-            ChessPosition kingPos = locateKing(teamColor);
-            Collection<ChessMove> kingPieceMoves = validMoves(kingPos);
-            if (kingPieceMoves.isEmpty()) {
-                // Some other piece may be able to capture the checking piece
-                Collection<ChessPosition> checkingPieces = getAttackingPieces(kingPos,teamColor);
-                if (checkingPieces.size() > 1) {
-                    return true;
+        if (!isInCheck(teamColor)) {
+            return false;
+        }
+        ChessPosition kingPos = locateKing(teamColor);
+        Collection<ChessMove> kingPieceMoves = validMoves(kingPos);
+        if (kingPieceMoves.isEmpty()) {
+            // Some other piece may be able to capture the checking piece
+            Collection<ChessPosition> checkingPieces = getAttackingPieces(kingPos,teamColor);
+            if (checkingPieces.size() > 1) {
+                return true;
+            }
+            for (ChessPosition checkingPiecePos : checkingPieces) {
+                // if piece is capturable
+                ChessPiece capturablePiece = gameBoard.getPiece(checkingPiecePos);
+                TeamColor opposingColor = capturablePiece.getTeamColor();
+                // Assume the capturable piece is a knight
+                gameBoard.addPiece(checkingPiecePos,new ChessPiece(opposingColor, ChessPiece.PieceType.KNIGHT));
+                Collection<ChessMove> knightMoves = gameBoard.getPiece(checkingPiecePos).pieceMoves(gameBoard,checkingPiecePos);
+                for (ChessMove move : knightMoves) {
+                    if (gameBoard.getPiece(move.getEndPosition()) != null &&
+                            gameBoard.getPiece(move.getEndPosition()).getPieceType() == ChessPiece.PieceType.KNIGHT &&
+                            gameBoard.getPiece(move.getEndPosition()).getTeamColor() == teamColor) {
+                        gameBoard.addPiece(checkingPiecePos,capturablePiece);
+                        return false;
+                        }
+                    }
+                // Assume the capturable piece is a rook
+                gameBoard.addPiece(checkingPiecePos,new ChessPiece(opposingColor, ChessPiece.PieceType.ROOK));
+                Collection<ChessMove> rookMoves = gameBoard.getPiece(checkingPiecePos).pieceMoves(gameBoard,checkingPiecePos);
+                for (ChessMove move : rookMoves) {
+                    if (gameBoard.getPiece(move.getEndPosition()) != null &&
+                            gameBoard.getPiece(move.getEndPosition()).getPieceType() == ChessPiece.PieceType.ROOK &&
+                            gameBoard.getPiece(move.getEndPosition()).getTeamColor() == teamColor) {
+                        gameBoard.addPiece(checkingPiecePos,capturablePiece);
+                        return false;
+                    }
                 }
-                for (ChessPosition checkingPiecePos : checkingPieces) {
-                    // if piece is capturable
-                    ChessPiece capturablePiece = gameBoard.getPiece(checkingPiecePos);
-                    TeamColor opposingColor = capturablePiece.getTeamColor();
-                    // Assume the capturable piece is a knight
-                    gameBoard.addPiece(checkingPiecePos,new ChessPiece(opposingColor, ChessPiece.PieceType.KNIGHT));
-                    Collection<ChessMove> knightMoves = gameBoard.getPiece(checkingPiecePos).pieceMoves(gameBoard,checkingPiecePos);
-                    for (ChessMove move : knightMoves) {
-                        if (gameBoard.getPiece(move.getEndPosition()) != null &&
-                                gameBoard.getPiece(move.getEndPosition()).getPieceType() == ChessPiece.PieceType.KNIGHT &&
-                                gameBoard.getPiece(move.getEndPosition()).getTeamColor() == teamColor) {
-                            gameBoard.addPiece(checkingPiecePos,capturablePiece);
-                            return false;
-                        }
+                // Assume the capturable piece is a bishop
+                gameBoard.addPiece(checkingPiecePos,new ChessPiece(opposingColor, ChessPiece.PieceType.BISHOP));
+                Collection<ChessMove> bishopMoves = gameBoard.getPiece(checkingPiecePos).pieceMoves(gameBoard,checkingPiecePos);
+                for (ChessMove move : bishopMoves) {
+                    if (gameBoard.getPiece(move.getEndPosition()) != null &&
+                            gameBoard.getPiece(move.getEndPosition()).getPieceType() == ChessPiece.PieceType.BISHOP &&
+                            gameBoard.getPiece(move.getEndPosition()).getTeamColor() == teamColor) {
+                        gameBoard.addPiece(checkingPiecePos,capturablePiece);
+                        return false;
                     }
-                    // Assume the capturable piece is a rook
-                    gameBoard.addPiece(checkingPiecePos,new ChessPiece(opposingColor, ChessPiece.PieceType.ROOK));
-                    Collection<ChessMove> rookMoves = gameBoard.getPiece(checkingPiecePos).pieceMoves(gameBoard,checkingPiecePos);
-                    for (ChessMove move : rookMoves) {
-                        if (gameBoard.getPiece(move.getEndPosition()) != null &&
-                                gameBoard.getPiece(move.getEndPosition()).getPieceType() == ChessPiece.PieceType.ROOK &&
-                                gameBoard.getPiece(move.getEndPosition()).getTeamColor() == teamColor) {
-                            gameBoard.addPiece(checkingPiecePos,capturablePiece);
-                            return false;
-                        }
-                    }
-                    // Assume the capturable piece is a bishop
-                    gameBoard.addPiece(checkingPiecePos,new ChessPiece(opposingColor, ChessPiece.PieceType.BISHOP));
-                    Collection<ChessMove> bishopMoves = gameBoard.getPiece(checkingPiecePos).pieceMoves(gameBoard,checkingPiecePos);
-                    for (ChessMove move : bishopMoves) {
-                        if (gameBoard.getPiece(move.getEndPosition()) != null &&
-                                gameBoard.getPiece(move.getEndPosition()).getPieceType() == ChessPiece.PieceType.BISHOP &&
-                                gameBoard.getPiece(move.getEndPosition()).getTeamColor() == teamColor) {
-                            gameBoard.addPiece(checkingPiecePos,capturablePiece);
-                            return false;
-                        }
-                    }
-                    // Can a pawn take?
-                    return true;
                 }
+                // Can a pawn take?
+                return true;
             }
         }
         return false;
