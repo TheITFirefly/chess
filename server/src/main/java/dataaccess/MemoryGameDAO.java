@@ -23,4 +23,13 @@ public class MemoryGameDAO implements GameDAO {
             throw new DataAccessException("Error: Couldn't contact database");
         }
     }
+
+    @Override
+    public void createGame(GameData gameData) throws DataAccessException {
+        try {
+            gameTable.add(gameData);
+        } catch (Exception e) {
+            throw new DataAccessException("Error: Couldn't contact database");
+        }
+    }
 }

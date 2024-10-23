@@ -1,4 +1,3 @@
 package datatransfer;
 
-public record CreateGameRequest(int gameName) {
-}
+public record CreateGameRequest(String authToken, CreateGameRequestBody body) {}

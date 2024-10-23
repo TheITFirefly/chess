@@ -21,6 +21,7 @@ public class Server {
         LoginService loginService = new LoginService(authDAO,userDAO);
         LogoutService logoutService = new LogoutService(authDAO);
         ListGamesService listGamesService = new ListGamesService(authDAO,gameDAO);
+        CreateGameService createGameService = new CreateGameService(authDAO,gameDAO);
 
         // Handlers
         ClearHandler clearHandler = new ClearHandler(clearService);
@@ -28,6 +29,7 @@ public class Server {
         LoginHandler loginHandler = new LoginHandler(loginService);
         LogoutHandler logoutHandler = new LogoutHandler(logoutService);
         ListGamesHandler listGamesHandler = new ListGamesHandler(listGamesService);
+        CreateGameHandler createGameHandler = new CreateGameHandler(createGameService);
 
         // Spark configuration
         Spark.port(desiredPort);
@@ -39,6 +41,7 @@ public class Server {
         Spark.post("/session", (loginHandler::handle));
         Spark.delete("/session", (logoutHandler::handle));
         Spark.get("/game", (listGamesHandler::handle));
+        Spark.post("/game",(createGameHandler::handle));
         Spark.awaitInitialization();
         return Spark.port();
     }
