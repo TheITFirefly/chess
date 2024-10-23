@@ -86,7 +86,5 @@ public class ChessMove {
         }
         ChessMove objComp = (ChessMove) obj;
         return hashCode() == objComp.hashCode();
-        //try this again after implementing equals for chesspiece.piecetype
-        //return getStartPosition() == objComp.getStartPosition() && getEndPosition() == objComp.getEndPosition() && getPromotionPiece() == objComp.getPromotionPiece();
     }
 }
