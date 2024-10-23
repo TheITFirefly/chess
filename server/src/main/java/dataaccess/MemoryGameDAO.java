@@ -11,7 +11,16 @@ public class MemoryGameDAO implements GameDAO {
         try {
             gameTable.clear();
         } catch (Exception e) {
-            throw new DataAccessException("Failed clearing game table");
+            throw new DataAccessException("Error: Failed clearing game table");
+        }
+    }
+
+    @Override
+    public List<GameData> listGames() throws DataAccessException {
+        try {
+            return gameTable;
+        } catch (Exception e) {
+            throw new DataAccessException("Error: Couldn't contact database");
         }
     }
 }
