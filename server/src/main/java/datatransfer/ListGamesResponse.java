@@ -1,6 +1,8 @@
 package datatransfer;
 
+import model.GameData;
+
 import java.util.List;
 
-public record ListGamesResponse(List<ListGameResponse> games) {
+public record ListGamesResponse(List<GameData> games) {
 }
