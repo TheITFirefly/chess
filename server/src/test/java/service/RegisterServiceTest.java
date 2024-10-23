@@ -27,7 +27,7 @@ public class RegisterServiceTest {
 
     @Test
     @Order(2)
-    @DisplayName("Register user positive")
+    @DisplayName("Register user negative")
     public void repeatUserRegistration() {
         MemoryUserDAO userDAO = new MemoryUserDAO();
         MemoryAuthDAO authDAO = new MemoryAuthDAO();
