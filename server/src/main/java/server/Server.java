@@ -22,6 +22,7 @@ public class Server {
         LogoutService logoutService = new LogoutService(authDAO);
         ListGamesService listGamesService = new ListGamesService(authDAO,gameDAO);
         CreateGameService createGameService = new CreateGameService(authDAO,gameDAO);
+        JoinGameService joinGameService = new JoinGameService(authDAO,gameDAO);
 
         // Handlers
         ClearHandler clearHandler = new ClearHandler(clearService);
@@ -30,6 +31,7 @@ public class Server {
         LogoutHandler logoutHandler = new LogoutHandler(logoutService);
         ListGamesHandler listGamesHandler = new ListGamesHandler(listGamesService);
         CreateGameHandler createGameHandler = new CreateGameHandler(createGameService);
+        JoinGameHandler joinGameHandler = new JoinGameHandler(joinGameService);
 
         // Spark configuration
         Spark.port(desiredPort);
@@ -42,6 +44,7 @@ public class Server {
         Spark.delete("/session", (logoutHandler::handle));
         Spark.get("/game", (listGamesHandler::handle));
         Spark.post("/game",(createGameHandler::handle));
+        Spark.put("/game",(joinGameHandler::handle));
         Spark.awaitInitialization();
         return Spark.port();
     }

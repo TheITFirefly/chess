@@ -4,6 +4,7 @@ import model.GameData;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class MemoryGameDAO implements GameDAO {
     List<GameData> gameTable = new ArrayList<>();
@@ -30,6 +31,33 @@ public class MemoryGameDAO implements GameDAO {
             gameTable.add(gameData);
         } catch (Exception e) {
             throw new DataAccessException("Error: Couldn't contact database");
+        }
+    }
+
+    @Override
+    public GameData getGame(int gameID) throws DataAccessException {
+        try {
+            for (GameData gameData : gameTable) {
+                if (gameData.gameID() == gameID) {
+                    return gameData;
+                }
+            }
+            return null;
+        } catch (Exception e) {
+            throw new DataAccessException(e.getMessage());
+        }
+    }
+
+    @Override
+    public void updateGame(GameData gameData) throws DataAccessException {
+        try {
+            for (GameData oldData : gameTable) {
+                if (Objects.equals(oldData.gameID(), gameData.gameID())) {
+                    oldData = gameData;
+                }
+            }
+        } catch (Exception e) {
+            throw  new DataAccessException(e.getMessage());
         }
     }
 }
