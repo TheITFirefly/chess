@@ -2,6 +2,8 @@ package handler;
 
 import com.google.gson.Gson;
 import datatransfer.DataTransfer;
+import datatransfer.ErrorResponse;
+import datatransfer.ClearResponse;
 import service.ClearService;
 import spark.Request;
 import spark.Response;
@@ -12,15 +14,21 @@ public class ClearHandler {
         this.service = clearService;
     }
 
-    public Response handle(Request request, Response response) {
+    public String handle(Request request, Response response) {
         Gson gson = new Gson();
-        DataTransfer responseData = service.clearDatabase();
-        if ("success".equals(responseData.status())) {
-            response.status(200);
-        } else {
-            response.status(500);
-            response.body(gson.toJson(responseData.data()));
+        DataTransfer<?> responseData = service.clearDatabase();
+
+        // Data is a ClearResponse
+        if (responseData.data() instanceof ClearResponse) {
+            return gson.toJson(responseData.data());
         }
-        return  response;
+
+        if (responseData.data() instanceof ErrorResponse) {
+            response.status(500);
+            return gson.toJson(responseData.data());
+        }
+        response.status(500);
+        return gson.toJson(new ErrorResponse("Catastrophic Failure","Error: Something went seriously wrong here").message());
     }
+
 }

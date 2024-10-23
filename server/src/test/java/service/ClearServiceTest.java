@@ -4,6 +4,7 @@ import chess.*;
 import dataaccess.MemoryAuthDAO;
 import dataaccess.MemoryGameDAO;
 import dataaccess.MemoryUserDAO;
+import datatransfer.ClearResponse;
 import datatransfer.DataTransfer;
 import org.junit.jupiter.api.*;
 import spark.Response;
@@ -19,6 +20,7 @@ public class ClearServiceTest {
         MemoryGameDAO gameDAO = new MemoryGameDAO();
         ClearService service = new ClearService(authDAO,userDAO,gameDAO);
         DataTransfer result = service.clearDatabase();
-        Assertions.assertEquals("Success",result.status());
+        Assertions.assertInstanceOf(ClearResponse.class, result.data());
+
     }
 }

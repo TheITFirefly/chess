@@ -11,7 +11,16 @@ public class MemoryAuthDAO implements AuthDAO {
         try {
             authTable.clear();
         } catch (Exception e) {
-            throw  new DataAccessException("Failed clearing auth table");
+            throw new DataAccessException("Error: Failed clearing auth table");
+        }
+    }
+
+    @Override
+    public void createAuth(AuthData authData) throws DataAccessException {
+        try {
+            authTable.add(authData);
+        } catch (Exception e) {
+            throw new DataAccessException("Error: Failed to add user");
         }
     }
 }
