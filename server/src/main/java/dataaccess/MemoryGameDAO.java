@@ -51,13 +51,14 @@ public class MemoryGameDAO implements GameDAO {
     @Override
     public void updateGame(GameData gameData) throws DataAccessException {
         try {
-            for (GameData oldData : gameTable) {
-                if (Objects.equals(oldData.gameID(), gameData.gameID())) {
-                    oldData = gameData;
+            for (int i = 0; i < gameTable.size(); i++) {
+                if (Objects.equals(gameTable.get(i).gameID(), gameData.gameID())) {
+                    gameTable.set(i, gameData);
+                    return;
                 }
             }
         } catch (Exception e) {
-            throw  new DataAccessException(e.getMessage());
+            throw new DataAccessException(e.getMessage());
         }
     }
 }
