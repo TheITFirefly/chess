@@ -3,9 +3,11 @@ package service;
 import dataaccess.DataAccessException;
 import dataaccess.MemoryAuthDAO;
 import dataaccess.MemoryUserDAO;
-import datatransfer.*;
+import request.*;
 import model.AuthData;
 import model.UserData;
+import response.ErrorResponse;
+import response.LoginResponse;
 
 import java.util.Objects;
 import java.util.UUID;

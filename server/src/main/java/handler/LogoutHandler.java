@@ -1,10 +1,10 @@
 package handler;
 
 import com.google.gson.Gson;
-import datatransfer.DataTransfer;
-import datatransfer.ErrorResponse;
-import datatransfer.LogoutRequest;
-import datatransfer.LogoutResponse;
+import request.DataTransfer;
+import response.ErrorResponse;
+import request.LogoutRequest;
+import response.LogoutResponse;
 import service.LogoutService;
 import spark.Request;
 import spark.Response;

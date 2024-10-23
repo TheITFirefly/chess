@@ -1,13 +1,11 @@
 package service;
 
-import chess.*;
 import dataaccess.MemoryAuthDAO;
 import dataaccess.MemoryGameDAO;
 import dataaccess.MemoryUserDAO;
-import datatransfer.ClearResponse;
-import datatransfer.DataTransfer;
+import response.ClearResponse;
+import request.DataTransfer;
 import org.junit.jupiter.api.*;
-import spark.Response;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class ClearServiceTest {

@@ -1,10 +1,10 @@
 package service;
 
 import dataaccess.*;
-import datatransfer.DataTransfer;
-import datatransfer.ErrorResponse;
-import datatransfer.RegisterRequest;
-import datatransfer.RegisterResponse;
+import request.DataTransfer;
+import response.ErrorResponse;
+import request.RegisterRequest;
+import response.RegisterResponse;
 import model.AuthData;
 import model.UserData;
 

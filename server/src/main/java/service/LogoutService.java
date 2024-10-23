@@ -2,10 +2,10 @@ package service;
 
 import dataaccess.DataAccessException;
 import dataaccess.MemoryAuthDAO;
-import datatransfer.DataTransfer;
-import datatransfer.ErrorResponse;
-import datatransfer.LogoutRequest;
-import datatransfer.LogoutResponse;
+import request.DataTransfer;
+import response.ErrorResponse;
+import request.LogoutRequest;
+import response.LogoutResponse;
 import model.AuthData;
 
 public class LogoutService {

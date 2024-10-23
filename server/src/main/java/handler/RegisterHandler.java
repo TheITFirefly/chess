@@ -1,10 +1,10 @@
 package handler;
 
 import com.google.gson.Gson;
-import datatransfer.DataTransfer;
-import datatransfer.ErrorResponse;
-import datatransfer.RegisterRequest;
-import datatransfer.RegisterResponse;
+import request.DataTransfer;
+import response.ErrorResponse;
+import request.RegisterRequest;
+import response.RegisterResponse;
 import service.RegisterService;
 import spark.Request;
 import spark.Response;

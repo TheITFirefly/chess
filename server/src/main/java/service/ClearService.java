@@ -1,13 +1,12 @@
 package service;
 
-import com.google.gson.Gson;
 import dataaccess.DataAccessException;
 import dataaccess.MemoryAuthDAO;
 import dataaccess.MemoryGameDAO;
 import dataaccess.MemoryUserDAO;
-import datatransfer.ClearResponse;
-import datatransfer.DataTransfer;
-import datatransfer.ErrorResponse;
+import response.ClearResponse;
+import request.DataTransfer;
+import response.ErrorResponse;
 
 public class ClearService {
     MemoryAuthDAO authDAO;

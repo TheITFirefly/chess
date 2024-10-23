@@ -2,11 +2,13 @@ package service;
 
 import dataaccess.MemoryAuthDAO;
 import dataaccess.MemoryUserDAO;
-import datatransfer.*;
+import request.*;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
+import response.ErrorResponse;
+import response.LoginResponse;
 
 public class LoginServiceTest {
     @Test

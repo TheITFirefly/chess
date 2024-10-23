@@ -1,7 +1,9 @@
 package handler;
 
 import com.google.gson.Gson;
-import datatransfer.*;
+import request.*;
+import response.ErrorResponse;
+import response.LoginResponse;
 import service.LoginService;
 import spark.Request;
 import spark.Response;

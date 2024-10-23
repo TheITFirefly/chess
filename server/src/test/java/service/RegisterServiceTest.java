@@ -2,10 +2,10 @@ package service;
 
 import dataaccess.MemoryAuthDAO;
 import dataaccess.MemoryUserDAO;
-import datatransfer.ErrorResponse;
-import datatransfer.RegisterResponse;
-import datatransfer.DataTransfer;
-import datatransfer.RegisterRequest;
+import response.ErrorResponse;
+import response.RegisterResponse;
+import request.DataTransfer;
+import request.RegisterRequest;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Order;

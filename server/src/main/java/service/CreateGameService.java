@@ -4,9 +4,11 @@ import chess.ChessGame;
 import dataaccess.AuthDAO;
 import dataaccess.DataAccessException;
 import dataaccess.GameDAO;
-import datatransfer.*;
+import request.*;
 import model.AuthData;
 import model.GameData;
+import response.CreateGameResponse;
+import response.ErrorResponse;
 
 import java.util.Objects;
 

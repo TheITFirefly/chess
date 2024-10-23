@@ -1,4 +1,4 @@
-package datatransfer;
+package response;
 
 public record JoinGameResponse() {
 }

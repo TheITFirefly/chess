@@ -1,4 +1,4 @@
-package datatransfer;
+package response;
 
 import model.GameData;
 
