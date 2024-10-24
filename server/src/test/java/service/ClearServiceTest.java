@@ -12,7 +12,7 @@ public class ClearServiceTest {
     @Test
     @Order(1)
     @DisplayName("Clear database positive")
-    public void databaseClear(){
+    public void databaseClearPositive(){
         MemoryAuthDAO authDAO = new MemoryAuthDAO();
         MemoryUserDAO userDAO = new MemoryUserDAO();
         MemoryGameDAO gameDAO = new MemoryGameDAO();

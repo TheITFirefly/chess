@@ -1,60 +1,43 @@
 package service;
 
+import dataaccess.DataAccessException;
 import dataaccess.MemoryAuthDAO;
-import dataaccess.MemoryUserDAO;
-import request.*;
+import model.AuthData;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
+import request.DataTransfer;
+import request.LogoutRequest;
 import response.ErrorResponse;
-import response.LoginResponse;
 import response.LogoutResponse;
 
 public class LogoutServiceTest {
+
     @Test
     @Order(1)
-    @DisplayName("Logout user positive")
-    public void successfulUserLogin() {
-        // Set up DAO
-        MemoryUserDAO userDAO = new MemoryUserDAO();
+    @DisplayName("Logout positive")
+    public void logoutPositive() throws DataAccessException {
         MemoryAuthDAO authDAO = new MemoryAuthDAO();
-
-        // Register a user
-        RegisterService registerService = new RegisterService(authDAO, userDAO);
-        RegisterRequest registerRequest = new RegisterRequest("lolcats", "passw00rd", "foo@bar.baz");
-        registerService.register(registerRequest);
-
-        // Login the registered user
-        LoginService loginService = new LoginService(authDAO, userDAO);
-        LoginRequest loginRequest = new LoginRequest("lolcats", "passw00rd");
-        DataTransfer<?> loginResponse = loginService.login(loginRequest);
-
-        // Logout the now logged-in user
         LogoutService logoutService = new LogoutService(authDAO);
-        if (loginResponse.data() instanceof LoginResponse) {
-            LogoutRequest logoutRequest = new LogoutRequest(((LoginResponse) loginResponse.data()).authToken());
-            DataTransfer result = logoutService.logout(logoutRequest);
-            Assertions.assertInstanceOf(LogoutResponse.class, result.data());
-        }
-        // User not logged in
-        Assertions.fail();
+        authDAO.createAuth(new AuthData("validToken", "player1"));
+        LogoutRequest request = new LogoutRequest("validToken");
+        DataTransfer<?> result = logoutService.logout(request);
+        Assertions.assertInstanceOf(LogoutResponse.class, result.data());
+        AuthData authData = authDAO.getAuth("validToken");
+        Assertions.assertNull(authData);  // Token should no longer exist
     }
-
 
     @Test
     @Order(2)
-    @DisplayName("Logout user negative")
-    public void unsuccessfulUserLogin() {
-        MemoryUserDAO userDAO = new MemoryUserDAO();
+    @DisplayName("Logout negative - Unauthorized")
+    public void logoutNegative() throws DataAccessException {
         MemoryAuthDAO authDAO = new MemoryAuthDAO();
-        RegisterService registerService = new RegisterService(authDAO, userDAO);
-        RegisterRequest registerRequest = new RegisterRequest("lolcats", "passw00rd", "foo@bar.baz");
-        registerService.register(registerRequest);
-        LoginService loginService = new LoginService(authDAO, userDAO);
-        LoginRequest loginRequest = new LoginRequest("lolcats", "pwrd");
-        DataTransfer result = loginService.login(loginRequest);
+        LogoutService logoutService = new LogoutService(authDAO);
+        LogoutRequest request = new LogoutRequest("invalidToken");
+        DataTransfer<?> result = logoutService.logout(request);
         Assertions.assertInstanceOf(ErrorResponse.class, result.data());
+        ErrorResponse errorResponse = (ErrorResponse) result.data();
+        Assertions.assertEquals("Error: unauthorized", errorResponse.message());
     }
 }
-

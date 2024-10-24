@@ -27,14 +27,16 @@ public class RegisterServiceTest {
 
     @Test
     @Order(2)
-    @DisplayName("Register user negative")
-    public void repeatUserRegistration() {
+    @DisplayName("Register user negative - already taken")
+    public void registerNegative() {
         MemoryUserDAO userDAO = new MemoryUserDAO();
         MemoryAuthDAO authDAO = new MemoryAuthDAO();
         RegisterService service = new RegisterService(authDAO, userDAO);
         RegisterRequest request = new RegisterRequest("lolcats", "passw00rd", "foo@bar.baz");
         service.register(request);
-        DataTransfer result = service.register(request);
+        DataTransfer<?> result = service.register(request);
         Assertions.assertInstanceOf(ErrorResponse.class, result.data());
+        ErrorResponse errorResponse = (ErrorResponse) result.data();
+        Assertions.assertEquals("Error: already taken", errorResponse.message());
     }
 }
