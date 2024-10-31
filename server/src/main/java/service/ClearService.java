@@ -1,19 +1,16 @@
 package service;
 
-import dataaccess.DataAccessException;
-import dataaccess.MemoryAuthDAO;
-import dataaccess.MemoryGameDAO;
-import dataaccess.MemoryUserDAO;
+import dataaccess.*;
 import response.ClearResponse;
 import request.DataTransfer;
 import response.ErrorResponse;
 
 public class ClearService {
-    MemoryAuthDAO authDAO;
-    MemoryUserDAO userDAO;
-    MemoryGameDAO gameDAO;
+    AuthDAO authDAO;
+    UserDAO userDAO;
+    GameDAO gameDAO;
 
-    public ClearService(MemoryAuthDAO authDAO, MemoryUserDAO userDAO, MemoryGameDAO gameDAO) {
+    public ClearService(AuthDAO authDAO, UserDAO userDAO, GameDAO gameDAO) {
         this.authDAO = authDAO;
         this.userDAO = userDAO;
         this.gameDAO = gameDAO;
@@ -21,8 +18,8 @@ public class ClearService {
 
     public DataTransfer<?> clearDatabase() {
         try{
-            authDAO.clearAuths();
             userDAO.clearUsers();
+            authDAO.clearAuths();
             gameDAO.clearGames();
         } catch (DataAccessException error) {
             return new DataTransfer<ErrorResponse>(new ErrorResponse("Failure","Error: unable to clear database"));
