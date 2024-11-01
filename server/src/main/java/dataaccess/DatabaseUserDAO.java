@@ -10,16 +10,16 @@ public class DatabaseUserDAO implements UserDAO {
     public void clearUsers() throws DataAccessException {
         try {
             initializeUserTable();
-            try (var conn = DatabaseManager.getConnection()) {
-                try (var stmt = conn.prepareStatement(
-                        "drop table userdata;")) {
-                    stmt.executeUpdate();
-                }
-            } catch (SQLException e) {
-                throw new DataAccessException("Error dropping userdata table: " + e.getMessage());
-            }
         } catch (DataAccessException e) {
             throw  new DataAccessException("Failed during table initialization: "+e.getMessage());
+        }
+        try (var conn = DatabaseManager.getConnection()) {
+            try (var stmt = conn.prepareStatement(
+                    "drop table userdata;")) {
+                stmt.executeUpdate();
+            }
+        } catch (SQLException e) {
+            throw new DataAccessException("Error dropping userdata table: " + e.getMessage());
         }
     }
 
@@ -27,22 +27,22 @@ public class DatabaseUserDAO implements UserDAO {
     public UserData getUser(String username) throws DataAccessException {
         try {
             initializeUserTable();
-            try (var conn = DatabaseManager.getConnection()) {
-                try (var stmt = conn.prepareStatement("SELECT * FROM userdata WHERE username = ?")) {
-                    stmt.setString(1, username);
-                    try (var rs = stmt.executeQuery()) {
-                        if (rs.next()) {
-                            return new UserData(rs.getString("username"), rs.getString("password"),rs.getString("email"));
-                        }
+        } catch (DataAccessException e) {
+            throw new DataAccessException(e.getMessage());
+        }
+        try (var conn = DatabaseManager.getConnection()) {
+            try (var stmt = conn.prepareStatement("SELECT * FROM userdata WHERE username = ?")) {
+                stmt.setString(1, username);
+                try (var rs = stmt.executeQuery()) {
+                    if (rs.next()) {
+                        return new UserData(rs.getString("username"), rs.getString("password"),rs.getString("email"));
                     }
-                } catch (SQLException e) {
-                    throw new DataAccessException("Error selecting user from userdata table: " + e.getMessage());
                 }
             } catch (SQLException e) {
                 throw new DataAccessException("Error selecting user from userdata table: " + e.getMessage());
             }
-        } catch (DataAccessException e) {
-            throw new DataAccessException(e.getMessage());
+        } catch (SQLException e) {
+            throw new DataAccessException("Error selecting user from userdata table: " + e.getMessage());
         }
         return null;
     }
@@ -51,21 +51,20 @@ public class DatabaseUserDAO implements UserDAO {
     public void createUser(UserData userData) throws DataAccessException {
         try {
             initializeUserTable();
-
-            try (var conn = DatabaseManager.getConnection()) {
-                // Insert the new user
-                try (var insertStmt = conn.prepareStatement("INSERT INTO userdata (username, password, email) VALUES (?, ?, ?)")) {
-                    insertStmt.setString(1, userData.username());
-                    insertStmt.setString(2, userData.password());
-                    insertStmt.setString(3, userData.email());
-
-                    insertStmt.executeUpdate();
-                }
-            } catch (SQLException e) {
-                throw new DataAccessException("Error inserting user into userdata table: " + e.getMessage());
-            }
         } catch (DataAccessException e) {
             throw new DataAccessException(e.getMessage());
+        }
+        try (var conn = DatabaseManager.getConnection()) {
+            // Insert the new user
+            try (var insertStmt = conn.prepareStatement("INSERT INTO userdata (username, password, email) VALUES (?, ?, ?)")) {
+                insertStmt.setString(1, userData.username());
+                insertStmt.setString(2, userData.password());
+                insertStmt.setString(3, userData.email());
+
+                insertStmt.executeUpdate();
+            }
+        } catch (SQLException e) {
+            throw new DataAccessException("Error inserting user into userdata table: " + e.getMessage());
         }
     }
 
