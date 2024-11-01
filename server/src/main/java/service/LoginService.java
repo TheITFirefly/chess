@@ -3,6 +3,7 @@ package service;
 import dataaccess.DataAccessException;
 import dataaccess.MemoryAuthDAO;
 import dataaccess.UserDAO;
+import org.mindrot.jbcrypt.BCrypt;
 import request.*;
 import model.AuthData;
 import model.UserData;
@@ -25,7 +26,7 @@ public class LoginService {
             UserData userData = userDAO.getUser(request.username());
             if (userData == null) {
                 return new DataTransfer<ErrorResponse>(new ErrorResponse("Forbidden","Error: unauthorized"));
-            } else if (!Objects.equals(request.password(), userData.password())) {
+            } else if (!BCrypt.checkpw(request.password(), userData.password())) {
                 return new DataTransfer<ErrorResponse>(new ErrorResponse("Forbidden","Error: unauthorized"));
             }
             String authToken = generateToken();

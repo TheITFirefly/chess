@@ -1,6 +1,7 @@
 package service;
 
 import dataaccess.*;
+import org.mindrot.jbcrypt.BCrypt;
 import request.DataTransfer;
 import response.ErrorResponse;
 import request.RegisterRequest;
@@ -23,7 +24,8 @@ public class RegisterService {
         try {
             UserData userData = userDAO.getUser(request.username());
             if (userData == null){
-                userDAO.createUser(new UserData(request.username(), request.password(), request.email()));
+                String hashedPassword = BCrypt.hashpw(request.password(), BCrypt.gensalt());
+                userDAO.createUser(new UserData(request.username(), hashedPassword, request.email()));
                 String authToken = generateToken();
                 authDAO.createAuth(new AuthData(authToken,request.username()));
                 return new DataTransfer<RegisterResponse>(new RegisterResponse(request.username(), authToken));
