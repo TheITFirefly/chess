@@ -15,7 +15,7 @@ public class DatabaseUserDAO implements UserDAO {
         }
         try (var conn = DatabaseManager.getConnection()) {
             try (var stmt = conn.prepareStatement(
-                    "drop table userdata;")) {
+                    "DELETE FROM userdata;")) {
                 stmt.executeUpdate();
             }
         } catch (SQLException e) {
