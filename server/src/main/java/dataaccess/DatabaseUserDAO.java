@@ -71,10 +71,10 @@ public class DatabaseUserDAO implements UserDAO {
     private void initializeUserTable() throws DataAccessException {
         try (var conn = DatabaseManager.getConnection()) {
             try (var stmt = conn.prepareStatement(
-                    "create table if not exists userdata (" +
-                            "username VARCHAR(255) primary key, " +
-                            "password VARCHAR(255) not null, " +
-                            "email VARCHAR(255) not null);")) {
+                    "CREATE TABLE IF NOT EXISTS userdata (" +
+                            "username VARCHAR(255) PRIMARY KEY, " +
+                            "password VARCHAR(255) NOT NULL, " +
+                            "email VARCHAR(255) NOT NULL);")) {
                 stmt.executeUpdate();
             }
         } catch (SQLException e) {
