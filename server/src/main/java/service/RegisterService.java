@@ -11,10 +11,10 @@ import model.UserData;
 import java.util.UUID;
 
 public class RegisterService {
-    MemoryAuthDAO authDAO;
-    MemoryUserDAO userDAO;
+    AuthDAO authDAO;
+    UserDAO userDAO;
 
-    public RegisterService(MemoryAuthDAO authDAO, MemoryUserDAO userDAO) {
+    public RegisterService(AuthDAO authDAO, UserDAO userDAO) {
         this.authDAO = authDAO;
         this.userDAO = userDAO;
     }

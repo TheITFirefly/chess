@@ -1,8 +1,6 @@
 package server;
 
-import dataaccess.MemoryAuthDAO;
-import dataaccess.MemoryGameDAO;
-import dataaccess.MemoryUserDAO;
+import dataaccess.*;
 import handler.*;
 import service.*;
 import spark.*;
@@ -10,10 +8,13 @@ import spark.*;
 public class Server {
 
     public int run(int desiredPort) {
-        // DAO objects
+        // Memory DAO objects
         MemoryAuthDAO authDAO = new MemoryAuthDAO();
-        MemoryUserDAO userDAO = new MemoryUserDAO();
+//        MemoryUserDAO userDAO = new MemoryUserDAO();
         MemoryGameDAO gameDAO = new MemoryGameDAO();
+
+        // Database DAO objects
+        DatabaseUserDAO userDAO = new DatabaseUserDAO();
 
         // Services
         ClearService clearService = new ClearService(authDAO,userDAO,gameDAO);
