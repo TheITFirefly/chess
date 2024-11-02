@@ -147,6 +147,13 @@ public class DatabaseGameDAO implements GameDAO{
     private void initializeGameTable() throws DataAccessException {
         try (var conn = DatabaseManager.getConnection()) {
             try (var stmt = conn.prepareStatement(
+                    "CREATE TABLE IF NOT EXISTS userdata (" +
+                            "username VARCHAR(255) PRIMARY KEY, " +
+                            "password VARCHAR(255) NOT NULL, " +
+                            "email VARCHAR(255) NOT NULL);")) {
+                stmt.executeUpdate();
+            }
+            try (var stmt = conn.prepareStatement(
                     "CREATE TABLE IF NOT EXISTS gamedata (" +
                             "gameid INT PRIMARY KEY, " +
                             "whiteusername VARCHAR(255), " +
