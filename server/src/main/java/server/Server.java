@@ -8,11 +8,6 @@ import spark.*;
 public class Server {
 
     public int run(int desiredPort) {
-        // Memory DAO objects
-//        MemoryUserDAO userDAO = new MemoryUserDAO();
-//        MemoryAuthDAO authDAO = new MemoryAuthDAO();
-//        MemoryGameDAO gameDAO = new MemoryGameDAO();
-
         // Database DAO objects
         DatabaseUserDAO userDAO = new DatabaseUserDAO();
         DatabaseAuthDAO authDAO = new DatabaseAuthDAO();
