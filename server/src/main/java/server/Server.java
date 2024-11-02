@@ -11,11 +11,12 @@ public class Server {
         // Memory DAO objects
 //        MemoryUserDAO userDAO = new MemoryUserDAO();
 //        MemoryAuthDAO authDAO = new MemoryAuthDAO();
-        MemoryGameDAO gameDAO = new MemoryGameDAO();
+//        MemoryGameDAO gameDAO = new MemoryGameDAO();
 
         // Database DAO objects
         DatabaseUserDAO userDAO = new DatabaseUserDAO();
         DatabaseAuthDAO authDAO = new DatabaseAuthDAO();
+        DatabaseGameDAO gameDAO = new DatabaseGameDAO();
 
         // Services
         ClearService clearService = new ClearService(authDAO,userDAO,gameDAO);

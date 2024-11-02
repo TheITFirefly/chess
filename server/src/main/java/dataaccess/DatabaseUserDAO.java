@@ -19,7 +19,7 @@ public class DatabaseUserDAO implements UserDAO {
                 stmt.executeUpdate();
             }
         } catch (SQLException e) {
-            throw new DataAccessException("Error dropping userdata table: " + e.getMessage());
+            throw new DataAccessException("Error clearing userdata table: " + e.getMessage());
         }
     }
 
@@ -55,7 +55,6 @@ public class DatabaseUserDAO implements UserDAO {
             throw new DataAccessException(e.getMessage());
         }
         try (var conn = DatabaseManager.getConnection()) {
-            // Insert the new user
             try (var insertStmt = conn.prepareStatement("INSERT INTO userdata (username, password, email) VALUES (?, ?, ?)")) {
                 insertStmt.setString(1, userData.username());
                 insertStmt.setString(2, userData.password());
