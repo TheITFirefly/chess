@@ -27,8 +27,6 @@ public class DatabaseUserDAOTest {
     public void clearUsersPositive() throws DataAccessException {
         userDAO.createUser(new UserData("user1", "password1", "user1@example.com"));
         userDAO.clearUsers();
-
-        // Verify the table is empty
         assertNull(userDAO.getUser("user1"));
     }
 
@@ -38,7 +36,6 @@ public class DatabaseUserDAOTest {
     public void createUserPositive() throws DataAccessException {
         UserData user = new UserData("user2", "password2", "user2@example.com");
         userDAO.createUser(user);
-
         UserData retrievedUser = userDAO.getUser("user2");
         assertNotNull(retrievedUser);
         assertEquals(user.username(), retrievedUser.username());
@@ -52,7 +49,6 @@ public class DatabaseUserDAOTest {
     public void createUserNegative() throws DataAccessException {
         UserData user = new UserData("user3", "password3", "user3@example.com");
         userDAO.createUser(user);
-
         DataAccessException thrown = assertThrows(DataAccessException.class, () -> {
             userDAO.createUser(new UserData("user3", "password4", "user4@example.com"));
         });
@@ -65,7 +61,6 @@ public class DatabaseUserDAOTest {
     public void getUserPositive() throws DataAccessException {
         UserData user = new UserData("user4", "password4", "user4@example.com");
         userDAO.createUser(user);
-
         UserData retrievedUser = userDAO.getUser("user4");
         assertNotNull(retrievedUser);
         assertEquals(user.username(), retrievedUser.username());
