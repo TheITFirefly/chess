@@ -85,6 +85,11 @@ public class DatabaseAuthDAO implements AuthDAO {
     }
 
     private void initializeAuthTable() throws DataAccessException {
+        try {
+            DatabaseManager.createDatabase();
+        } catch (DataAccessException e) {
+            throw new DataAccessException("Failed during database creation: " + e.getMessage());
+        }
         try (var conn = DatabaseManager.getConnection()) {
             try (var stmt = conn.prepareStatement(
                     "CREATE TABLE IF NOT EXISTS userdata (" +
