@@ -69,7 +69,9 @@ public class DatabaseGameDAO implements GameDAO{
         ChessGame game = gameData.game();
         String gameJson = gson.toJson(game);
         try (var conn = DatabaseManager.getConnection()) {
-            try (var insertStmt = conn.prepareStatement("INSERT INTO gamedata (gameid,whiteusername,blackusername,gamename,game) VALUES (?, ?, ?, ?, ?)")) {
+            try (var insertStmt = conn.prepareStatement("INSERT INTO gamedata (" +
+                    "gameid,whiteusername,blackusername,gamename,game) " +
+                    "VALUES (?, ?, ?, ?, ?)")) {
                 insertStmt.setString(1, gameData.gameID().toString());
                 insertStmt.setString(2, gameData.whiteUsername());
                 insertStmt.setString(3, gameData.blackUsername());
