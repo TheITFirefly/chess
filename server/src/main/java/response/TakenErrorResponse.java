@@ -1,4 +1,3 @@
 package response;
 
-public record TakenErrorResponse(String message) {
-}
+public record TakenErrorResponse(String message) {}
