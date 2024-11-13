@@ -2,9 +2,10 @@ package service;
 
 import dataaccess.MemoryAuthDAO;
 import dataaccess.MemoryUserDAO;
+import errors.DataAccessException;
+import errors.DuplicateEntryException;
 import response.ErrorResponse;
 import response.RegisterResponse;
-import request.DataTransfer;
 import request.RegisterRequest;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
@@ -12,6 +13,7 @@ import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 
 public class RegisterServiceTest {
+
     @Test
     @Order(1)
     @DisplayName("Register user positive")
@@ -19,24 +21,31 @@ public class RegisterServiceTest {
         MemoryUserDAO userDAO = new MemoryUserDAO();
         MemoryAuthDAO authDAO = new MemoryAuthDAO();
         RegisterService service = new RegisterService(authDAO, userDAO);
-        RegisterRequest request = new RegisterRequest("lolcats", "passw00rd", "foo@bar.baz");
-        DataTransfer result = service.register(request);
-        Assertions.assertInstanceOf(RegisterResponse.class, result.data());
-    }
 
+        // Create a RegisterRequest with valid, unique details
+        RegisterRequest request = new RegisterRequest("lolcats", "passw00rd", "foo@bar.baz");
+
+        // Perform the registration
+        Assertions.assertDoesNotThrow(() -> {
+            RegisterResponse response = service.register(request);
+        });
+    }
 
     @Test
     @Order(2)
     @DisplayName("Register user negative - already taken")
-    public void registerNegative() {
+    public void registerNegative() throws DuplicateEntryException, DataAccessException {
         MemoryUserDAO userDAO = new MemoryUserDAO();
         MemoryAuthDAO authDAO = new MemoryAuthDAO();
         RegisterService service = new RegisterService(authDAO, userDAO);
         RegisterRequest request = new RegisterRequest("lolcats", "passw00rd", "foo@bar.baz");
+        // First registration should succeed
         service.register(request);
-        DataTransfer<?> result = service.register(request);
-        Assertions.assertInstanceOf(ErrorResponse.class, result.data());
-        ErrorResponse errorResponse = (ErrorResponse) result.data();
-        Assertions.assertEquals("Error: already taken", errorResponse.message());
+        // Second registration with the same username should throw an exception
+        Assertions.assertThrows(
+                DuplicateEntryException.class,
+                () -> service.register(request),
+                "Expected an DuplicateEntryException due to username being already taken"
+        );
     }
 }

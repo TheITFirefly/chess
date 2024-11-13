@@ -20,7 +20,7 @@ public class LoginHandler {
         if (loginRequest.username() == null ||
                 loginRequest.password() == null) {
             response.status(400);
-            return gson.toJson(new ErrorResponse("Bad data", "Error: bad request"));
+            return gson.toJson(new ErrorResponse("Error: bad request"));
         }
         DataTransfer<?> responseData = service.login(loginRequest);
         if (responseData.data() instanceof ErrorResponse) {
@@ -31,6 +31,6 @@ public class LoginHandler {
             return gson.toJson(responseData.data());
         }
         response.status(500);
-        return gson.toJson(new ErrorResponse("Catastrophic Failure","Error: Something went seriously wrong here"));
+        return gson.toJson(new ErrorResponse("Error: Something went seriously wrong here"));
     }
 }

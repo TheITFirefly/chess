@@ -1,7 +1,7 @@
 package service;
 
 import dataaccess.AuthDAO;
-import dataaccess.DataAccessException;
+import errors.DataAccessException;
 import request.DataTransfer;
 import response.ErrorResponse;
 import request.LogoutRequest;
@@ -22,9 +22,9 @@ public class LogoutService {
                 authDAO.deleteAuth(request.authToken());
                 return new DataTransfer<LogoutResponse>(new LogoutResponse());
             }
-            return new DataTransfer<ErrorResponse>(new ErrorResponse("Forbidden", "Error: unauthorized"));
+            return new DataTransfer<ErrorResponse>(new ErrorResponse("Error: unauthorized"));
         } catch (DataAccessException e) {
-            return new DataTransfer<ErrorResponse>(new ErrorResponse("Catastrophic failure", e.getMessage()));
+            return new DataTransfer<ErrorResponse>(new ErrorResponse("Catastrophic failure"+e.getMessage()));
         }
     }
 }

@@ -20,7 +20,7 @@ public class CreateGameHandler {
         CreateGameRequestBody body = gson.fromJson(request.body(),CreateGameRequestBody.class);
         if (body.gameName() == null || authToken == null) {
             response.status(400);
-            return gson.toJson(new ErrorResponse("Bad data", "Error: bad request"));
+            return gson.toJson(new ErrorResponse("Error: bad request"));
         }
         DataTransfer<?> responseData = service.createGame(new CreateGameRequest(authToken,body));
         if (responseData.data() instanceof  ErrorResponse) {
@@ -31,6 +31,6 @@ public class CreateGameHandler {
             return gson.toJson(responseData.data());
         }
         response.status(500);
-        return gson.toJson(new ErrorResponse("Catastrophic Failure","Error: Something went seriously wrong here"));
+        return gson.toJson(new ErrorResponse("Error: Something went seriously wrong here"));
     }
 }

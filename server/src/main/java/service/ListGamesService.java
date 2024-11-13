@@ -1,7 +1,7 @@
 package service;
 
 import dataaccess.AuthDAO;
-import dataaccess.DataAccessException;
+import errors.DataAccessException;
 import dataaccess.GameDAO;
 import request.*;
 import model.AuthData;
@@ -28,11 +28,11 @@ public class ListGamesService {
                     List<GameData> games = gameDAO.listGames();
                     return new DataTransfer<ListGamesResponse>(new ListGamesResponse(games));
                 }
-                return new DataTransfer<ErrorResponse>(new ErrorResponse("Forbidden", "Error: unauthorized"));
+                return new DataTransfer<ErrorResponse>(new ErrorResponse("Error: unauthorized"));
             }
-            return new DataTransfer<ErrorResponse>(new ErrorResponse("Forbidden", "Error: unauthorized"));
+            return new DataTransfer<ErrorResponse>(new ErrorResponse("Error: unauthorized"));
         } catch (DataAccessException e) {
-            return new DataTransfer<ErrorResponse>(new ErrorResponse("Catastrophic failure", e.getMessage()));
+            return new DataTransfer<ErrorResponse>(new ErrorResponse("Catastrophic failure"+e.getMessage()));
         }
     }
 }

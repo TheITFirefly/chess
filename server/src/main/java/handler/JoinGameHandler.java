@@ -26,7 +26,7 @@ public class JoinGameHandler {
                 (!body.playerColor().equals("WHITE") && !body.playerColor().equals("BLACK")) ||
                 body.gameID() <= 0) {
             response.status(400);  // Bad Request
-            return gson.toJson(new ErrorResponse("Bad data", "Error: bad request"));
+            return gson.toJson(new ErrorResponse("Error: bad request"));
         }
 
         // Call the join game service
@@ -50,6 +50,6 @@ public class JoinGameHandler {
 
         // Default fallback in case of an unexpected error
         response.status(500);  // Internal Server Error
-        return gson.toJson(new ErrorResponse("Catastrophic Failure", "Error: Something went seriously wrong here"));
+        return gson.toJson(new ErrorResponse("Error: Something went seriously wrong here"));
     }
 }

@@ -1,5 +1,6 @@
 package dataaccess;
 
+import errors.DataAccessException;
 import model.AuthData;
 
 import java.util.ArrayList;
@@ -8,7 +9,7 @@ import java.util.Objects;
 
 public class MemoryAuthDAO implements AuthDAO {
     List<AuthData> authTable = new ArrayList<>();
-    public void clearAuths() throws DataAccessException{
+    public void clearAuths() throws DataAccessException {
         try {
             authTable.clear();
         } catch (Exception e) {

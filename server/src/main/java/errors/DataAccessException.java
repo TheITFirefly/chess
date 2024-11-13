@@ -1,4 +1,4 @@
-package dataaccess;
+package errors;
 
 /**
  * Indicates there was an error connecting to the database

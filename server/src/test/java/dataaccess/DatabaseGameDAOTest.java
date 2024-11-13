@@ -1,6 +1,7 @@
 package dataaccess;
 
 import chess.ChessGame;
+import errors.DataAccessException;
 import model.GameData;
 import model.UserData;
 import org.junit.jupiter.api.BeforeEach;

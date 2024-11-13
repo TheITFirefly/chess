@@ -1,6 +1,7 @@
 package service;
 
 import dataaccess.*;
+import errors.DataAccessException;
 import response.ClearResponse;
 import request.DataTransfer;
 import response.ErrorResponse;
@@ -22,7 +23,7 @@ public class ClearService {
             authDAO.clearAuths();
             gameDAO.clearGames();
         } catch (DataAccessException error) {
-            return new DataTransfer<ErrorResponse>(new ErrorResponse("Failure","Error: unable to clear database"));
+            return new DataTransfer<ErrorResponse>(new ErrorResponse("Error: unable to clear database"));
         }
         return new DataTransfer<ClearResponse>(new ClearResponse());
     }

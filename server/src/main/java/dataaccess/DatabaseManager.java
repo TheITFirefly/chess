@@ -1,5 +1,7 @@
 package dataaccess;
 
+import errors.DataAccessException;
+
 import java.sql.*;
 import java.util.Properties;
 

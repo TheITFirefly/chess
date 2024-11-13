@@ -1,8 +1,7 @@
 package service;
 
 import dataaccess.AuthDAO;
-import dataaccess.DataAccessException;
-import dataaccess.MemoryAuthDAO;
+import errors.DataAccessException;
 import dataaccess.UserDAO;
 import org.mindrot.jbcrypt.BCrypt;
 import request.*;
@@ -25,15 +24,15 @@ public class LoginService {
         try {
             UserData userData = userDAO.getUser(request.username());
             if (userData == null) {
-                return new DataTransfer<ErrorResponse>(new ErrorResponse("Forbidden","Error: unauthorized"));
+                return new DataTransfer<ErrorResponse>(new ErrorResponse("Error: unauthorized"));
             } else if (!BCrypt.checkpw(request.password(), userData.password())) {
-                return new DataTransfer<ErrorResponse>(new ErrorResponse("Forbidden","Error: unauthorized"));
+                return new DataTransfer<ErrorResponse>(new ErrorResponse("Error: unauthorized"));
             }
             String authToken = generateToken();
             authDAO.createAuth(new AuthData(authToken, request.username()));
             return new DataTransfer<LoginResponse>(new LoginResponse(request.username(), authToken));
         } catch (DataAccessException e) {
-            return new DataTransfer<ErrorResponse>(new ErrorResponse("Catastrophic failure",e.getMessage()));
+            return new DataTransfer<ErrorResponse>(new ErrorResponse("Catastrophic failure"+e.getMessage()));
         }
     }
 

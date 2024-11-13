@@ -25,6 +25,6 @@ public class ListGamesHandler {
             return gson.toJson(responseData.data());
         }
         response.status(500);
-        return gson.toJson(new ErrorResponse("Catastrophic Failure","Error: Something went seriously wrong here"));
+        return gson.toJson(new ErrorResponse("Error: Something went seriously wrong here"));
     }
 }

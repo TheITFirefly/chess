@@ -2,7 +2,7 @@ package service;
 
 import chess.ChessGame;
 import dataaccess.AuthDAO;
-import dataaccess.DataAccessException;
+import errors.DataAccessException;
 import dataaccess.GameDAO;
 import request.*;
 import model.AuthData;
@@ -29,11 +29,11 @@ public class CreateGameService {
                     gameDAO.createGame(new GameData(gameID,null,null,request.body().gameName(), new ChessGame()));
                     return new DataTransfer<CreateGameResponse>(new CreateGameResponse(gameID));
                 }
-                return new DataTransfer<ErrorResponse>(new ErrorResponse("Forbidden", "Error: unauthorized"));
+                return new DataTransfer<ErrorResponse>(new ErrorResponse("Error: unauthorized"));
             }
-            return new DataTransfer<ErrorResponse>(new ErrorResponse("Forbidden", "Error: unauthorized"));
+            return new DataTransfer<ErrorResponse>(new ErrorResponse("Error: unauthorized"));
         } catch (DataAccessException e) {
-            return new DataTransfer<ErrorResponse>(new ErrorResponse("Catastrophic failure", e.getMessage()));
+            return new DataTransfer<ErrorResponse>(new ErrorResponse("Catastrophic failure"+e.getMessage()));
         }
     }
 }

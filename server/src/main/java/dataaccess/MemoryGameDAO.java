@@ -1,5 +1,6 @@
 package dataaccess;
 
+import errors.DataAccessException;
 import model.GameData;
 
 import java.util.ArrayList;
@@ -8,7 +9,7 @@ import java.util.Objects;
 
 public class MemoryGameDAO implements GameDAO {
     List<GameData> gameTable = new ArrayList<>();
-    public void clearGames() throws DataAccessException{
+    public void clearGames() throws DataAccessException {
         try {
             gameTable.clear();
         } catch (Exception e) {

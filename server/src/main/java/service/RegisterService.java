@@ -1,6 +1,8 @@
 package service;
 
 import dataaccess.*;
+import errors.DataAccessException;
+import errors.DuplicateEntryException;
 import org.mindrot.jbcrypt.BCrypt;
 import request.DataTransfer;
 import response.ErrorResponse;
@@ -20,7 +22,7 @@ public class RegisterService {
         this.userDAO = userDAO;
     }
 
-    public DataTransfer<?> register(RegisterRequest request) {
+    public RegisterResponse register(RegisterRequest request) throws DuplicateEntryException, DataAccessException {
         try {
             UserData userData = userDAO.getUser(request.username());
             if (userData == null){
@@ -28,11 +30,11 @@ public class RegisterService {
                 userDAO.createUser(new UserData(request.username(), hashedPassword, request.email()));
                 String authToken = generateToken();
                 authDAO.createAuth(new AuthData(authToken,request.username()));
-                return new DataTransfer<RegisterResponse>(new RegisterResponse(request.username(), authToken));
+                return new RegisterResponse(request.username(), authToken);
             }
-            return new DataTransfer<ErrorResponse>(new ErrorResponse("Forbidden","Error: already taken"));
+            throw new DuplicateEntryException("Error: already taken");
         } catch (DataAccessException e) {
-            return new DataTransfer<ErrorResponse>(new ErrorResponse("Catastrophic failure",e.getMessage()));
+            throw new DataAccessException("Catastrophic failure"+e.getMessage());
         }
     }
 
