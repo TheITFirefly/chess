@@ -89,8 +89,8 @@ public class ServerFacadeTests {
     @Order(6)
     @DisplayName("Logout user negative with facade")
     public void logoutNegative() {
-        LogoutResponse logoutResponse = facade.logout(new LogoutRequest("Fake auth token"));
-        Assertions.assertTrue(logoutResponse.success());
+        LogoutResponse logoutResponse = facade.logout(new LogoutRequest("Fakeauthtoken"));
+        Assertions.assertFalse(logoutResponse.success());
     }
 
     @Test
