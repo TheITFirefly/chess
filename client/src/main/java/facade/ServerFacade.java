@@ -24,7 +24,7 @@ public class ServerFacade implements Facade {
     }
 
     @Override
-    public RegResponse register(RegisterRequest registerRequest) {
+    public RegisterResponse register(RegisterRequest registerRequest) {
         // Convert the RegisterRequest object to JSON
         String jsonBody = gson.toJson(registerRequest);
 
@@ -35,19 +35,35 @@ public class ServerFacade implements Facade {
         return switch (response.statusCode()) {
             case 200 -> {
                 // Parse the success response
-                var successResponse = gson.fromJson(response.body(), RegResponse.class);
-                yield new RegResponse(true, "", successResponse.username(), successResponse.authToken());
+                var successResponse = gson.fromJson(response.body(), RegisterResponse.class);
+                yield new RegisterResponse(true, "", successResponse.username(), successResponse.authToken());
             }
-            case 400 -> new RegResponse(false, "Bad request", null, null);
-            case 403 -> new RegResponse(false, "Username already taken", null, null);
-            case 500 -> new RegResponse(false, "500 Error: " + response.body(), null, null);
-            default -> new RegResponse(false, "An unexpected error occurred", null, null);
+            case 400 -> new RegisterResponse(false, "Bad request", null, null);
+            case 403 -> new RegisterResponse(false, "Username already taken", null, null);
+            case 500 -> new RegisterResponse(false, "500 Error: " + response.body(), null, null);
+            default -> new RegisterResponse(false, "An unexpected error occurred", null, null);
         };
     }
 
     @Override
     public LoginResponse login(LoginRequest loginRequest) {
-        throw new RuntimeException("Not implemented");
+        // Convert the LoginRequest object to JSON
+        String jsonBody = gson.toJson(loginRequest);
+
+        // Make the POST request to the /session endpoint
+        HttpResponse<String> response = makeWebRequest("POST", "/session", jsonBody, null);
+
+        // Handle the response based on its status code
+        return switch (response.statusCode()) {
+            case 200 -> {
+                // Parse the success response
+                var successResponse = gson.fromJson(response.body(), LoginResponse.class);
+                yield new LoginResponse(true, "", successResponse.username(), successResponse.authToken());
+            }
+            case 401 -> new LoginResponse(false, "Error: unauthorized", null, null);
+            case 500 -> new LoginResponse(false, "Error: " + response.body(), null, null);
+            default -> new LoginResponse(false, "An unexpected error occurred", null, null);
+        };
     }
 
     @Override
@@ -93,7 +109,7 @@ public class ServerFacade implements Facade {
 
             // Add Authorization header if authToken is provided
             if (authToken != null) {
-                requestBuilder.header("Authorization", "Bearer " + authToken);
+                requestBuilder.header("Authorization", authToken);
             }
 
             // Configure request method and body if applicable
@@ -123,7 +139,8 @@ public class ServerFacade implements Facade {
 
             // Send the request and return the response
             HttpRequest request = requestBuilder.build();
-            return client.send(request, HttpResponse.BodyHandlers.ofString());
+            HttpResponse<String> stringHttpResponse = client.send(request, HttpResponse.BodyHandlers.ofString());
+            return stringHttpResponse;
         } catch (URISyntaxException | IOException | InterruptedException e) {
             throw new RuntimeException("Error making web request", e);
         }

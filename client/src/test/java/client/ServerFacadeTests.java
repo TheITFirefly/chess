@@ -7,7 +7,7 @@ import client.response.JoinGameResponse;
 import client.response.ListGamesResponse;
 import client.response.LoginResponse;
 import client.response.LogoutResponse;
-import client.response.RegResponse;
+import client.response.RegisterResponse;
 import org.junit.jupiter.api.*;
 
 import java.io.IOException;
@@ -59,7 +59,7 @@ public class ServerFacadeTests {
     @Order(1)
     @DisplayName("Register user positive with facade")
     public void registerPositive() {
-        RegResponse registerResponse = facade.register(new RegisterRequest("lolcats", "passw00rd", "foo@bar.baz"));
+        RegisterResponse registerResponse = facade.register(new RegisterRequest("lolcats", "passw00rd", "foo@bar.baz"));
         Assertions.assertTrue(registerResponse.success());
     }
 
@@ -68,7 +68,7 @@ public class ServerFacadeTests {
     @DisplayName("Register user negative with facade")
     public void registerNegative() {
         facade.register(new RegisterRequest("lolcats", "passw00rd", "foo@bar.baz"));
-        RegResponse registerResponse = facade.register(new RegisterRequest("lolcats", "passw00rd", "foo@bar.baz"));
+        RegisterResponse registerResponse = facade.register(new RegisterRequest("lolcats", "passw00rd", "foo@bar.baz"));
         Assertions.assertFalse(registerResponse.success());
     }
 
