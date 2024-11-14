@@ -39,7 +39,7 @@ public class PreLoginREPL {
     }
 
     private void displayHelp() {
-        System.out.println("\nAvailable commands:");
+        System.out.println("Available commands:");
         System.out.println("  help     - Displays this help message.");
         System.out.println("  quit     - Exits the program.");
         System.out.println("  login    - Log in to an existing account.");
@@ -58,7 +58,7 @@ public class PreLoginREPL {
         if (loginResponse.success()) {
             System.out.println("Login successful! Welcome, " + username + ".");
             // Transition to PostLogin UI (not implemented yet)
-            //new PostLoginREPL(facade, loginResponse.getAuthToken()).run();
+            new PostLoginREPL(facade, loginResponse.authToken()).run();
         } else {
             System.out.println("Login failed: " + loginResponse.errorMessage());
         }
@@ -79,7 +79,7 @@ public class PreLoginREPL {
         if (registerResponse.success()) {
             System.out.println("Registration successful! Welcome, " + username + ".");
             // Transition to PostLogin UI (not implemented yet)
-            //new PostLoginREPL(facade, registerResponse.authToken()).run();
+            new PostLoginREPL(facade, registerResponse.authToken()).run();
         } else {
             System.out.println("Registration failed: " + registerResponse.errorMessage());
         }
