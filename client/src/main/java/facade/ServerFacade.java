@@ -1,5 +1,6 @@
 package facade;
 
+import chess.ChessGame;
 import client.request.*;
 import client.response.*;
 import com.google.gson.Gson;
@@ -79,7 +80,20 @@ public class ServerFacade implements Facade {
 
     @Override
     public ListGamesResponse listGames(ListGamesRequest listGamesRequest) {
-        throw new RuntimeException("Not implemented");
+        // Make the GET request to the /game endpoint with the authToken
+        HttpResponse<String> response = makeWebRequest("GET", "/game", null, listGamesRequest.authToken());
+
+        // Handle the response based on its status code
+        return switch (response.statusCode()) {
+            case 200 -> {
+                // Parse the success response
+                var successResponse = gson.fromJson(response.body(), ListGamesResponse.class);
+                yield new ListGamesResponse(true, "", successResponse.games());
+            }
+            case 401 -> new ListGamesResponse(false, "Error: unauthorized", null);
+            case 500 -> new ListGamesResponse(false, "Error: " + response.body(), null);
+            default -> new ListGamesResponse(false, "An unexpected error occurred", null);
+        };
     }
 
     @Override
