@@ -1,6 +1,7 @@
 package facade;
 
 import chess.ChessGame;
+import client.errors.ConnectionFailureException;
 import client.request.*;
 import client.response.*;
 import com.google.gson.Gson;
@@ -9,6 +10,7 @@ import java.io.IOException;
 import java.net.*;
 import java.net.http.*;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 
 public class ServerFacade implements Facade {
     private String serverAddress = "localhost";
@@ -36,7 +38,12 @@ public class ServerFacade implements Facade {
         String jsonBody = gson.toJson(registerRequest);
 
         // Make the POST request to the /user endpoint
-        HttpResponse<String> response = makeWebRequest("POST", "/user", jsonBody, null);
+        HttpResponse<String> response = null;
+        try {
+            response = makeWebRequest("POST", "/user", jsonBody, null);
+        } catch (ConnectionFailureException e) {
+            return new RegisterResponse(false,e.getMessage(),"","");
+        }
 
         // Handle the response based on its status code
         return switch (response.statusCode()) {
@@ -58,7 +65,12 @@ public class ServerFacade implements Facade {
         String jsonBody = gson.toJson(loginRequest);
 
         // Make the POST request to the /session endpoint
-        HttpResponse<String> response = makeWebRequest("POST", "/session", jsonBody, null);
+        HttpResponse<String> response = null;
+        try {
+            response = makeWebRequest("POST", "/session", jsonBody, null);
+        } catch (ConnectionFailureException e) {
+            return new LoginResponse(false,e.getMessage(),"","");
+        }
 
         // Handle the response based on its status code
         return switch (response.statusCode()) {
@@ -75,7 +87,12 @@ public class ServerFacade implements Facade {
 
     @Override
     public LogoutResponse logout(LogoutRequest logoutRequest) {
-        HttpResponse<String> response = makeWebRequest("DELETE", "/session", null, logoutRequest.authToken());
+        HttpResponse<String> response = null;
+        try {
+            response = makeWebRequest("DELETE", "/session", null, logoutRequest.authToken());
+        } catch (ConnectionFailureException e) {
+            return new LogoutResponse(false,e.getMessage());
+        }
         if (response.statusCode() == 200) {
             return new LogoutResponse(true,"");
         } else if (response.statusCode() == 401) {
@@ -87,7 +104,12 @@ public class ServerFacade implements Facade {
     @Override
     public ListGamesResponse listGames(ListGamesRequest listGamesRequest) {
         // Make the GET request to the /game endpoint with the authToken
-        HttpResponse<String> response = makeWebRequest("GET", "/game", null, listGamesRequest.authToken());
+        HttpResponse<String> response = null;
+        try {
+            response = makeWebRequest("GET", "/game", null, listGamesRequest.authToken());
+        } catch (ConnectionFailureException e) {
+            return new ListGamesResponse(false,e.getMessage(),new ArrayList<>());
+        }
 
         // Handle the response based on its status code
         return switch (response.statusCode()) {
@@ -108,7 +130,12 @@ public class ServerFacade implements Facade {
         String jsonBody = gson.toJson(createGameRequest);
 
         // Make the POST request to the /game endpoint with the authToken
-        HttpResponse<String> response = makeWebRequest("POST", "/game", jsonBody, createGameRequest.authToken());
+        HttpResponse<String> response = null;
+        try {
+            response = makeWebRequest("POST", "/game", jsonBody, createGameRequest.authToken());
+        } catch (ConnectionFailureException e) {
+            return new CreateGameResponse(false,e.getMessage(),-1);
+        }
 
         // Handle the response based on its status code
         return switch (response.statusCode()) {
@@ -130,7 +157,12 @@ public class ServerFacade implements Facade {
         String jsonBody = gson.toJson(joinGameRequest);
 
         // Make the PUT request to the /game endpoint with the authToken
-        HttpResponse<String> response = makeWebRequest("PUT", "/game", jsonBody, joinGameRequest.authToken());
+        HttpResponse<String> response = null;
+        try {
+            response = makeWebRequest("PUT", "/game", jsonBody, joinGameRequest.authToken());
+        } catch (ConnectionFailureException e) {
+            return new JoinGameResponse(false,e.getMessage());
+        }
 
         // Handle the response based on its status code
         return switch (response.statusCode()) {
@@ -143,7 +175,7 @@ public class ServerFacade implements Facade {
         };
     }
 
-    public HttpResponse<String> makeWebRequest(String method, String endpoint, String jsonBody, String authToken) {
+    public HttpResponse<String> makeWebRequest(String method, String endpoint, String jsonBody, String authToken) throws ConnectionFailureException {
         try {
             // Build URI from server address, port, and endpoint
             URI uri = new URI("http", null, serverAddress, port, endpoint, null, null);
@@ -190,10 +222,9 @@ public class ServerFacade implements Facade {
 
             // Send the request and return the response
             HttpRequest request = requestBuilder.build();
-            HttpResponse<String> stringHttpResponse = client.send(request, HttpResponse.BodyHandlers.ofString());
-            return stringHttpResponse;
+            return client.send(request, HttpResponse.BodyHandlers.ofString());
         } catch (URISyntaxException | IOException | InterruptedException e) {
-            throw new RuntimeException("Error making web request", e);
+            throw new ConnectionFailureException("Server is unreachable");
         }
     }
 
