@@ -4,8 +4,6 @@ import dataaccess.*;
 import errors.DataAccessException;
 import errors.DuplicateEntryException;
 import org.mindrot.jbcrypt.BCrypt;
-import request.DataTransfer;
-import response.ErrorResponse;
 import request.RegisterRequest;
 import response.RegisterResponse;
 import model.AuthData;

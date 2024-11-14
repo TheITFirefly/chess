@@ -1,8 +1,8 @@
 package facade;
 
+import client.request.*;
+import client.response.*;
 import com.google.gson.Gson;
-import request.*;
-import response.*;
 
 import java.io.IOException;
 import java.net.*;
@@ -24,8 +24,25 @@ public class ServerFacade implements Facade {
     }
 
     @Override
-    public RegisterResponse register(RegisterRequest registerRequest) {
-        throw new RuntimeException("Not implemented");
+    public RegResponse register(RegisterRequest registerRequest) {
+        // Convert the RegisterRequest object to JSON
+        String jsonBody = gson.toJson(registerRequest);
+
+        // Make the POST request to the /user endpoint
+        HttpResponse<String> response = makeWebRequest("POST", "/user", jsonBody, null);
+
+        // Handle the response based on its status code
+        return switch (response.statusCode()) {
+            case 200 -> {
+                // Parse the success response
+                var successResponse = gson.fromJson(response.body(), RegResponse.class);
+                yield new RegResponse(true, "", successResponse.username(), successResponse.authToken());
+            }
+            case 400 -> new RegResponse(false, "Bad request", null, null);
+            case 403 -> new RegResponse(false, "Username already taken", null, null);
+            case 500 -> new RegResponse(false, "500 Error: " + response.body(), null, null);
+            default -> new RegResponse(false, "An unexpected error occurred", null, null);
+        };
     }
 
     @Override
@@ -112,4 +129,11 @@ public class ServerFacade implements Facade {
         }
     }
 
+    public int getPort() {
+        return port;
+    }
+
+    public String getServerAddress() {
+        return serverAddress;
+    }
 }

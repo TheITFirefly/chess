@@ -1,3 +1,3 @@
-package request;
+package client.request;
 
 public record CreateGameRequest(String authToken, String gameName) {}

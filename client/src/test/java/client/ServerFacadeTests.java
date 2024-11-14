@@ -1,11 +1,21 @@
 package client;
 
+import client.request.*;
+import client.request.JoinGameRequest;
+import client.response.CreateGameResponse;
+import client.response.JoinGameResponse;
+import client.response.ListGamesResponse;
+import client.response.LoginResponse;
+import client.response.LogoutResponse;
+import client.response.RegResponse;
 import org.junit.jupiter.api.*;
 
+import java.io.IOException;
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.http.*;
-import request.*;
-import response.*;
+import java.net.http.HttpResponse.BodyHandlers;
+
 import server.Server;
 import facade.ServerFacade;
 
@@ -20,20 +30,7 @@ public class ServerFacadeTests {
         server = new Server();
         var port = server.run(0);
         System.out.println("Started test HTTP server on " + port);
-        HttpClient httpClient = HttpClient.newHttpClient();
-        // Clear the server
-        try {
-            HttpRequest request = HttpRequest.newBuilder()
-                    .uri(new URI("http://localhost:" + port + "/db"))
-                    .DELETE()
-                    .build();
-            HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
-            Assertions.assertEquals(200, response.statusCode(), "Failed to clear server state");
-        } catch (Exception e) {
-            Assertions.fail("Exception during server reset: " + e.getMessage());
-        }
         facade = new ServerFacade(port);
-
     }
 
     @AfterAll
@@ -41,11 +38,28 @@ public class ServerFacadeTests {
         server.stop();
     }
 
+    @BeforeEach
+    public void clear(){
+        try {
+            URI uri = new URI("http",null,facade.getServerAddress(), facade.getPort(), "/db",null,null);
+            try (HttpClient client = HttpClient.newHttpClient()) {
+                HttpRequest request = HttpRequest.newBuilder()
+                        .uri(uri)
+                        .DELETE()
+                        .build();
+                HttpResponse<String> response = client.send(request, BodyHandlers.ofString());
+                Assertions.assertEquals(200,response.statusCode());
+            }
+        } catch (URISyntaxException | IOException | InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     @Test
     @Order(1)
     @DisplayName("Register user positive with facade")
     public void registerPositive() {
-        RegisterResponse registerResponse = facade.register(new RegisterRequest("lolcats", "passw00rd", "foo@bar.baz"));
+        RegResponse registerResponse = facade.register(new RegisterRequest("lolcats", "passw00rd", "foo@bar.baz"));
         Assertions.assertTrue(registerResponse.success());
     }
 
@@ -54,7 +68,7 @@ public class ServerFacadeTests {
     @DisplayName("Register user negative with facade")
     public void registerNegative() {
         facade.register(new RegisterRequest("lolcats", "passw00rd", "foo@bar.baz"));
-        RegisterResponse registerResponse = facade.register(new RegisterRequest("lolcats", "passw00rd", "foo@bar.baz"));
+        RegResponse registerResponse = facade.register(new RegisterRequest("lolcats", "passw00rd", "foo@bar.baz"));
         Assertions.assertFalse(registerResponse.success());
     }
 

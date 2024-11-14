@@ -1,10 +1,10 @@
 package facade;
 
-import request.*;
-import response.*;
+import client.request.*;
+import client.response.*;
 
 public interface Facade {
-    RegisterResponse register(RegisterRequest registerRequest);
+    RegResponse register(RegisterRequest registerRequest);
     LoginResponse login(LoginRequest loginRequest);
     LogoutResponse logout(LogoutRequest logoutRequest);
     ListGamesResponse listGames(ListGamesRequest listGamesRequest);

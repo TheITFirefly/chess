@@ -1,3 +1,3 @@
-package request;
+package client.request;
 
 public record JoinGameRequest(String authToken, String playerColor, int gameID) {}
