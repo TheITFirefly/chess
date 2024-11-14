@@ -83,8 +83,25 @@ public class ServerFacade implements Facade {
     }
 
     @Override
-    public CreateGameResponse createGame(CreateGameRequest request) {
-        throw new RuntimeException("Not implemented");
+    public CreateGameResponse createGame(CreateGameRequest createGameRequest) {
+        // Convert the CreateGameRequest object to JSON
+        String jsonBody = gson.toJson(createGameRequest);
+
+        // Make the POST request to the /game endpoint with the authToken
+        HttpResponse<String> response = makeWebRequest("POST", "/game", jsonBody, createGameRequest.authToken());
+
+        // Handle the response based on its status code
+        return switch (response.statusCode()) {
+            case 200 -> {
+                // Parse the success response
+                var successResponse = gson.fromJson(response.body(), CreateGameResponse.class);
+                yield new CreateGameResponse(true, "", successResponse.gameID());
+            }
+            case 400 -> new CreateGameResponse(false, "Error: bad request", -1);
+            case 401 -> new CreateGameResponse(false, "Error: unauthorized", -1);
+            case 500 -> new CreateGameResponse(false, "Error: " + response.body(), -1);
+            default -> new CreateGameResponse(false, "An unexpected error occurred", -1);
+        };
     }
 
     @Override
