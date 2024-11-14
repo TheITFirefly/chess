@@ -26,6 +26,10 @@ public class ServerFacade implements Facade {
         this.port = port;
     }
 
+    public ServerFacade(String serverAddress) {
+        this.serverAddress = serverAddress;
+    }
+
     @Override
     public RegisterResponse register(RegisterRequest registerRequest) {
         // Convert the RegisterRequest object to JSON
