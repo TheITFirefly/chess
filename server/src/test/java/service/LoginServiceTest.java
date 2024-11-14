@@ -2,6 +2,7 @@ package service;
 
 import dataaccess.MemoryAuthDAO;
 import dataaccess.MemoryUserDAO;
+import dataaccess.UserDAO;
 import errors.DataAccessException;
 import errors.DuplicateEntryException;
 import request.*;
@@ -11,6 +12,7 @@ import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import response.ErrorResponse;
 import response.LoginResponse;
+import response.RegisterResponse;
 
 public class LoginServiceTest {
     @Test
@@ -25,15 +27,16 @@ public class LoginServiceTest {
         registerService.register(registerRequest);
         LoginService loginService = new LoginService(authDAO, userDAO);
         LoginRequest loginRequest = new LoginRequest("lolcats", "passw00rd");
-        DataTransfer<?> result = loginService.login(loginRequest);
-        Assertions.assertInstanceOf(LoginResponse.class, result.data());
+        Assertions.assertDoesNotThrow(() -> {
+            LoginResponse response = loginService.login(loginRequest);
+        });
     }
 
 
     @Test
     @Order(2)
     @DisplayName("Login user negative - Unauthorized")
-    public void loginNegative() throws DuplicateEntryException, DataAccessException {
+    public void loginNegative() throws UserDAO.UnauthorizedAccessException, DataAccessException, DuplicateEntryException {
         MemoryUserDAO userDAO = new MemoryUserDAO();
         MemoryAuthDAO authDAO = new MemoryAuthDAO();
         RegisterService registerService = new RegisterService(authDAO, userDAO);
@@ -42,9 +45,9 @@ public class LoginServiceTest {
         registerService.register(registerRequest);
         LoginService loginService = new LoginService(authDAO, userDAO);
         LoginRequest loginRequest = new LoginRequest("lolcats", "pwrd");
-        DataTransfer result = loginService.login(loginRequest);
-        Assertions.assertInstanceOf(ErrorResponse.class, result.data());
-        ErrorResponse errorResponse = (ErrorResponse) result.data();
-        Assertions.assertEquals("Error: unauthorized", errorResponse.message());
+        Assertions.assertThrows(
+                UserDAO.UnauthorizedAccessException.class,
+                () -> loginService.login(loginRequest)
+        );
     }
 }

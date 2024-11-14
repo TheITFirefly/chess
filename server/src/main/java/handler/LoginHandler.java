@@ -1,6 +1,8 @@
 package handler;
 
 import com.google.gson.Gson;
+import dataaccess.UserDAO;
+import errors.DataAccessException;
 import request.*;
 import response.ErrorResponse;
 import response.LoginResponse;
@@ -22,15 +24,17 @@ public class LoginHandler {
             response.status(400);
             return gson.toJson(new ErrorResponse("Error: bad request"));
         }
-        DataTransfer<?> responseData = service.login(loginRequest);
-        if (responseData.data() instanceof ErrorResponse) {
+
+        try {
+            LoginResponse loginResponse = service.login(loginRequest);
+            response.status(200);
+            return gson.toJson(loginResponse);
+        } catch (UserDAO.UnauthorizedAccessException e) {
             response.status(401);
-            return gson.toJson(responseData.data());
+            return gson.toJson(new ErrorResponse("Error: unauthorized"));
+        } catch (DataAccessException e) {
+            response.status(500);
+            return gson.toJson(new ErrorResponse("Error: " + e.getMessage()));
         }
-        if (responseData.data() instanceof LoginResponse) {
-            return gson.toJson(responseData.data());
-        }
-        response.status(500);
-        return gson.toJson(new ErrorResponse("Error: Something went seriously wrong here"));
     }
 }

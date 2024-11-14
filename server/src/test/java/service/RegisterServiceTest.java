@@ -45,7 +45,7 @@ public class RegisterServiceTest {
         Assertions.assertThrows(
                 DuplicateEntryException.class,
                 () -> service.register(request),
-                "Expected an DuplicateEntryException due to username being already taken"
+                "Expected a DuplicateEntryException due to username being already taken"
         );
     }
 }

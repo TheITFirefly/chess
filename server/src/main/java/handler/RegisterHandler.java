@@ -32,20 +32,17 @@ public class RegisterHandler {
         }
 
         try {
-            // Call the register service
             RegisterResponse responseData = service.register(registerRequest);
-
-            // Set response status to 200 and return JSON with auth token
             response.status(200);
             return gson.toJson(responseData);
 
         } catch (DuplicateEntryException e) {
-            // Handle case where the username is already taken
+            // Username is already taken
             response.status(403);
             return gson.toJson(new ErrorResponse("Error: already taken"));
 
         } catch (DataAccessException e) {
-            // Handle unexpected database errors
+            // Probably a database error
             response.status(500);
             return gson.toJson(new ErrorResponse("Error: " + e.getMessage()));
         }
