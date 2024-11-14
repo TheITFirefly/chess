@@ -47,19 +47,58 @@ public class EscapeSequences {
     public static final String SET_BG_COLOR_WHITE = SET_BG_COLOR + "15m";
     public static final String RESET_BG_COLOR = UNICODE_ESCAPE + "[49m";
 
-    public static final String WHITE_KING = "♔";
-    public static final String WHITE_QUEEN = "♕";
-    public static final String WHITE_BISHOP = "♗";
-    public static final String WHITE_KNIGHT = "♘";
-    public static final String WHITE_ROOK = "♖";
-    public static final String WHITE_PAWN = "♙";
-    public static final String BLACK_KING = "♚";
-    public static final String BLACK_QUEEN = "♛";
-    public static final String BLACK_BISHOP = "♝";
-    public static final String BLACK_KNIGHT = "♞";
-    public static final String BLACK_ROOK = "♜";
-    public static final String BLACK_PAWN = "♟";
-    public static final String EMPTY = " \u2003 ";
+//    public static final String WHITE_KING = SET_TEXT_COLOR_WHITE+" ♔ "+RESET_TEXT_COLOR;
+//    public static final String WHITE_QUEEN = SET_TEXT_COLOR_WHITE+" ♕ "+RESET_TEXT_COLOR;
+//    public static final String WHITE_BISHOP = SET_TEXT_COLOR_WHITE+" ♗ "+RESET_TEXT_COLOR;
+//    public static final String WHITE_KNIGHT = SET_TEXT_COLOR_WHITE+" ♘ "+RESET_TEXT_COLOR;
+//    public static final String WHITE_ROOK = SET_TEXT_COLOR_WHITE+" ♖ "+RESET_TEXT_COLOR;
+//    public static final String WHITE_PAWN = SET_TEXT_COLOR_WHITE+" ♙ "+RESET_TEXT_COLOR;
+//    public static final String BLACK_KING = SET_TEXT_COLOR_BLACK+" ♚ "+RESET_TEXT_COLOR;
+//    public static final String BLACK_QUEEN = SET_TEXT_COLOR_BLACK+" ♛ "+RESET_TEXT_COLOR;
+//    public static final String BLACK_BISHOP = SET_TEXT_COLOR_BLACK+" ♝ "+RESET_TEXT_COLOR;
+//    public static final String BLACK_KNIGHT = SET_TEXT_COLOR_BLACK+" ♞ "+RESET_TEXT_COLOR;
+//    public static final String BLACK_ROOK = SET_TEXT_COLOR_BLACK+" ♜ "+RESET_TEXT_COLOR;
+//    public static final String BLACK_PAWN = SET_TEXT_COLOR_BLACK+" ♟ "+RESET_TEXT_COLOR;
+//    public static final String EMPTY = " \u2003 ";
+
+    public static final String WHITE_KING = SET_TEXT_COLOR_WHITE+" K "+RESET_TEXT_COLOR;
+    public static final String WHITE_QUEEN = SET_TEXT_COLOR_WHITE+" Q "+RESET_TEXT_COLOR;
+    public static final String WHITE_BISHOP = SET_TEXT_COLOR_WHITE+" B "+RESET_TEXT_COLOR;
+    public static final String WHITE_KNIGHT = SET_TEXT_COLOR_WHITE+" N "+RESET_TEXT_COLOR;
+    public static final String WHITE_ROOK = SET_TEXT_COLOR_WHITE+" R "+RESET_TEXT_COLOR;
+    public static final String WHITE_PAWN = SET_TEXT_COLOR_WHITE+" P "+RESET_TEXT_COLOR;
+    public static final String BLACK_KING = SET_TEXT_COLOR_BLACK+" K "+RESET_TEXT_COLOR;
+    public static final String BLACK_QUEEN = SET_TEXT_COLOR_BLACK+" Q "+RESET_TEXT_COLOR;
+    public static final String BLACK_BISHOP = SET_TEXT_COLOR_BLACK+" B "+RESET_TEXT_COLOR;
+    public static final String BLACK_KNIGHT = SET_TEXT_COLOR_BLACK+" N "+RESET_TEXT_COLOR;
+    public static final String BLACK_ROOK = SET_TEXT_COLOR_BLACK+" R "+RESET_TEXT_COLOR;
+    public static final String BLACK_PAWN = SET_TEXT_COLOR_BLACK+" P "+RESET_TEXT_COLOR;
+    public static final String EMPTY = "   ";
+
+    // Empty stuff
+    public static final String EMPTY_DARK_SQUARE = SET_BG_COLOR_DARK_GREY+EMPTY+RESET_BG_COLOR;
+    public static final String EMPTY_LIGHT_SQUARE = SET_BG_COLOR_LIGHT_GREY+EMPTY+RESET_BG_COLOR;
+    public static final String EMPTY_BORDER_SQUARE = SET_BG_COLOR_BLACK+EMPTY+RESET_BG_COLOR;
+
+    // Column labels
+    public static final String COLUMN_A = SET_BG_COLOR_BLACK+" A "+RESET_BG_COLOR;
+    public static final String COLUMN_B = SET_BG_COLOR_BLACK+" B "+RESET_BG_COLOR;
+    public static final String COLUMN_C = SET_BG_COLOR_BLACK+" C "+RESET_BG_COLOR;
+    public static final String COLUMN_D = SET_BG_COLOR_BLACK+" D "+RESET_BG_COLOR;
+    public static final String COLUMN_E = SET_BG_COLOR_BLACK+" E "+RESET_BG_COLOR;
+    public static final String COLUMN_F = SET_BG_COLOR_BLACK+" F "+RESET_BG_COLOR;
+    public static final String COLUMN_G = SET_BG_COLOR_BLACK+" G "+RESET_BG_COLOR;
+    public static final String COLUMN_H = SET_BG_COLOR_BLACK+" H "+RESET_BG_COLOR;
+
+    // Row labels
+    public static final String ROW_1 = SET_BG_COLOR_BLACK+ " 1 " +RESET_BG_COLOR;
+    public static final String ROW_2 = SET_BG_COLOR_BLACK+ " 2 " +RESET_BG_COLOR;
+    public static final String ROW_3 = SET_BG_COLOR_BLACK+ " 3 " +RESET_BG_COLOR;
+    public static final String ROW_4 = SET_BG_COLOR_BLACK+ " 4 " +RESET_BG_COLOR;
+    public static final String ROW_5 = SET_BG_COLOR_BLACK+ " 5 " +RESET_BG_COLOR;
+    public static final String ROW_6 = SET_BG_COLOR_BLACK+ " 6 " +RESET_BG_COLOR;
+    public static final String ROW_7 = SET_BG_COLOR_BLACK+ " 7 " +RESET_BG_COLOR;
+    public static final String ROW_8 = SET_BG_COLOR_BLACK+ " 8 " +RESET_BG_COLOR;
 
     public static String moveCursorToLocation(int x, int y) { return UNICODE_ESCAPE + "[" + y + ";" + x + "H"; }
 }

@@ -21,7 +21,6 @@ public class GameplayREPL {
         // Also print out the initial board with both colors
         BoardPrinter boardPrinter = new BoardPrinter();
         boardPrinter.printBoard(game.getBoard(), ChessGame.TeamColor.WHITE);
-        boardPrinter.printBoard(game.getBoard(), ChessGame.TeamColor.BLACK);
     }
 
     public void updateGame(ChessGame game) {

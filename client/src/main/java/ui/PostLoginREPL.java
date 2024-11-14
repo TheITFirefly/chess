@@ -75,7 +75,7 @@ public class PostLoginREPL {
         CreateGameResponse createGameResponse = facade.createGame(createGameRequest);
 
         if (createGameResponse.success()) {
-            System.out.println("Game '" + gameName + "' created successfully with ID: " + createGameResponse.errorMessage());
+            System.out.println("Game '" + gameName + "' created successfully");
         } else {
             System.out.println("Failed to create game: " + createGameResponse.errorMessage());
         }
