@@ -56,7 +56,6 @@ public class Main {
 
         // Confirm server connection details
         System.out.println("Client will connect to server at " + facade.getServerAddress() + " on port " + facade.getPort());
-        // TODO: start repl loop. Write repl class for each layer of the loop
         PreLoginREPL preLogin = new PreLoginREPL(facade);
         preLogin.run();
         // User has exited all repl loops
