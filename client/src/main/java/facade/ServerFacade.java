@@ -106,7 +106,21 @@ public class ServerFacade implements Facade {
 
     @Override
     public JoinGameResponse joinGame(JoinGameRequest joinGameRequest) {
-        throw new RuntimeException("Not implemented");
+        // Convert the JoinGameRequest object to JSON
+        String jsonBody = gson.toJson(joinGameRequest);
+
+        // Make the PUT request to the /game endpoint with the authToken
+        HttpResponse<String> response = makeWebRequest("PUT", "/game", jsonBody, joinGameRequest.authToken());
+
+        // Handle the response based on its status code
+        return switch (response.statusCode()) {
+            case 200 -> new JoinGameResponse(true, ""); // Success with no error message
+            case 400 -> new JoinGameResponse(false, "Error: bad request");
+            case 401 -> new JoinGameResponse(false, "Error: unauthorized");
+            case 403 -> new JoinGameResponse(false, "Error: color already taken");
+            case 500 -> new JoinGameResponse(false, "Error: " + response.body());
+            default -> new JoinGameResponse(false, "An unexpected error occurred");
+        };
     }
 
     public HttpResponse<String> makeWebRequest(String method, String endpoint, String jsonBody, String authToken) {
