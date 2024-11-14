@@ -2,7 +2,7 @@ package service;
 
 import errors.DataAccessException;
 import dataaccess.MemoryAuthDAO;
-import model.AuthData;
+import server.model.AuthData;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Order;

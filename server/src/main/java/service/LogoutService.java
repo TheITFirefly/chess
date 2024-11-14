@@ -6,7 +6,7 @@ import request.DataTransfer;
 import response.ErrorResponse;
 import request.LogoutRequest;
 import response.LogoutResponse;
-import model.AuthData;
+import server.model.AuthData;
 
 public class LogoutService {
     AuthDAO authDAO;

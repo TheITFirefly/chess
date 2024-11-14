@@ -6,8 +6,8 @@ import errors.DuplicateEntryException;
 import org.mindrot.jbcrypt.BCrypt;
 import request.RegisterRequest;
 import response.RegisterResponse;
-import model.AuthData;
-import model.UserData;
+import server.model.AuthData;
+import server.model.UserData;
 
 import java.util.UUID;
 

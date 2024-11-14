@@ -2,7 +2,7 @@ package service;
 
 import dataaccess.MemoryAuthDAO;
 import dataaccess.MemoryGameDAO;
-import model.AuthData;
+import server.model.AuthData;
 import model.GameData;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;

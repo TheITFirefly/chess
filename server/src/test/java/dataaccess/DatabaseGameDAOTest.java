@@ -3,7 +3,7 @@ package dataaccess;
 import chess.ChessGame;
 import errors.DataAccessException;
 import model.GameData;
-import model.UserData;
+import server.model.UserData;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;

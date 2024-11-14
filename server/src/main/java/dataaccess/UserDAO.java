@@ -2,7 +2,7 @@ package dataaccess;
 
 import errors.DataAccessException;
 import errors.NotFoundException;
-import model.UserData;
+import server.model.UserData;
 
 public interface UserDAO {
     void clearUsers() throws DataAccessException;
