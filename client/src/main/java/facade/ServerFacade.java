@@ -12,8 +12,10 @@ import java.nio.charset.StandardCharsets;
 
 public class ServerFacade implements Facade {
     private String serverAddress = "localhost";
-    private final int port;
+    private int port = 8080;
     private final Gson gson = new Gson();
+
+    public ServerFacade() {}
 
     public ServerFacade(String serverAddress, int port) {
         this.serverAddress = serverAddress;
