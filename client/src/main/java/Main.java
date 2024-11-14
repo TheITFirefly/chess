@@ -12,23 +12,31 @@ public class Main {
         System.out.println("♕ 240 Chess Client: " + piece);
         Scanner scanner = new Scanner(System.in);
 
-        System.out.println("Do you want to use a custom server address? (yes/no): ");
+        System.out.print("Do you want to use a custom server address? (yes/no) Default (no): ");
         String useCustomServer = scanner.nextLine().trim().toLowerCase();
 
         ServerFacade facade;
 
         if (useCustomServer.equals("yes")) {
             // Ask for custom server address and port
-            System.out.print("Enter server address (or press Enter to use default): ");
+            System.out.print("Enter server address (or press Enter to use default (localhost)): ");
             String serverAddress = scanner.nextLine().trim();
 
-            System.out.print("Enter port number (or press Enter to use default): ");
+            System.out.print("Enter port number (or press Enter to use default (8080)): ");
             String portInput = scanner.nextLine().trim();
 
             // Determine which constructor to use based on user input
             if (!serverAddress.isEmpty() && !portInput.isEmpty()) {
                 // Server address and port provided
-                int port = Integer.parseInt(portInput);
+                int port;
+                try {
+                    port = Integer.parseInt(portInput);
+                } catch (NumberFormatException e) {
+                    System.out.println("Port was not a number. Using default");
+                    port = 8080;
+                } {
+
+                }
                 facade = new ServerFacade(serverAddress, port);
             } else if (!serverAddress.isEmpty()) {
                 // Only server address provided
