@@ -134,7 +134,7 @@ public class PostLoginREPL {
 
         if (joinGameResponse.success()) {
             System.out.println("Successfully joined game " + selectedGame.gameName() + " as " + color + ".");
-            new GameplayREPL(facade,authToken,color).run();
+            new GameplayREPL(facade,authToken,selectedGame.game(),color).run();
         } else {
             System.out.println("Failed to join game: " + joinGameResponse.errorMessage());
         }
