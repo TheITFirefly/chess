@@ -114,24 +114,4 @@ public class BoardPrinter {
         output.append("\n");
         System.out.println(output);
     }
-
-    // Helper method to get the Unicode symbol for each piece
-    private String getSymbolForPiece(ChessPiece piece) {
-        switch (piece.getPieceType()) {
-            case KING:
-                return piece.getTeamColor() == ChessGame.TeamColor.WHITE ? WHITE_KING : BLACK_KING;
-            case QUEEN:
-                return piece.getTeamColor() == ChessGame.TeamColor.WHITE ? WHITE_QUEEN : BLACK_QUEEN;
-            case BISHOP:
-                return piece.getTeamColor() == ChessGame.TeamColor.WHITE ? WHITE_BISHOP : BLACK_BISHOP;
-            case KNIGHT:
-                return piece.getTeamColor() == ChessGame.TeamColor.WHITE ? WHITE_KNIGHT : BLACK_KNIGHT;
-            case ROOK:
-                return piece.getTeamColor() == ChessGame.TeamColor.WHITE ? WHITE_ROOK : BLACK_ROOK;
-            case PAWN:
-                return piece.getTeamColor() == ChessGame.TeamColor.WHITE ? WHITE_PAWN : BLACK_PAWN;
-            default:
-                return EscapeSequences.EMPTY;
-        }
-    }
 }
