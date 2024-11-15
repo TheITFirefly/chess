@@ -56,7 +56,6 @@ public class BoardPrinter {
         output.append(SET_BG_COLOR_LIGHT_GREY+BLACK_ROOK+RESET_BG_COLOR);
         output.append("\n");
         System.out.println(output);
-
         output = new StringBuilder();
         output.append(EMPTY_BORDER_SQUARE+COLUMN_A+COLUMN_B+COLUMN_C+COLUMN_D+COLUMN_E+COLUMN_F+COLUMN_G+COLUMN_H+"\n");
         output.append(ROW_8);
@@ -69,7 +68,6 @@ public class BoardPrinter {
         output.append(SET_BG_COLOR_LIGHT_GREY+BLACK_KNIGHT+RESET_BG_COLOR);
         output.append(SET_BG_COLOR_DARK_GREY+BLACK_ROOK+RESET_BG_COLOR);
         output.append("\n");
-
         output.append(ROW_7);
         output.append(SET_BG_COLOR_DARK_GREY+BLACK_PAWN+RESET_BG_COLOR);
         output.append(SET_BG_COLOR_LIGHT_GREY+BLACK_PAWN+RESET_BG_COLOR);
@@ -80,12 +78,10 @@ public class BoardPrinter {
         output.append(SET_BG_COLOR_DARK_GREY+BLACK_PAWN+RESET_BG_COLOR);
         output.append(SET_BG_COLOR_LIGHT_GREY+BLACK_PAWN+RESET_BG_COLOR);
         output.append("\n");
-
         output.append(ROW_6+emptyLightStartRow()+"\n");
         output.append(ROW_5+emptyDarkStartRow()+"\n");
         output.append(ROW_4+emptyLightStartRow()+"\n");
         output.append(ROW_3+emptyDarkStartRow()+"\n");
-
         output.append(ROW_2);
         output.append(SET_BG_COLOR_LIGHT_GREY+WHITE_PAWN+RESET_BG_COLOR);
         output.append(SET_BG_COLOR_DARK_GREY+WHITE_PAWN+RESET_BG_COLOR);
@@ -101,7 +97,7 @@ public class BoardPrinter {
         output.append(SET_BG_COLOR_DARK_GREY+WHITE_ROOK+RESET_BG_COLOR);
         output.append(SET_BG_COLOR_LIGHT_GREY+WHITE_KNIGHT+RESET_BG_COLOR);
         output.append(SET_BG_COLOR_DARK_GREY+WHITE_BISHOP+RESET_BG_COLOR);
-        output.append(SET_BG_COLOR_LIGHT_GREY+WHITE_KING+RESET_BG_COLOR);
+        output.append(SET_BG_COLOR_LIGHT_GREY+WHITE_QUEEN+RESET_BG_COLOR);
         output.append(SET_BG_COLOR_DARK_GREY+WHITE_KING+RESET_BG_COLOR);
         output.append(SET_BG_COLOR_LIGHT_GREY+WHITE_BISHOP+RESET_BG_COLOR);
         output.append(SET_BG_COLOR_DARK_GREY+WHITE_KNIGHT+RESET_BG_COLOR);
