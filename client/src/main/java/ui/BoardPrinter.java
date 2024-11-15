@@ -21,7 +21,6 @@ public class BoardPrinter {
         output.append(SET_BG_COLOR_LIGHT_GREY+WHITE_KNIGHT+RESET_BG_COLOR);
         output.append(SET_BG_COLOR_DARK_GREY+WHITE_ROOK+RESET_BG_COLOR);
         output.append("\n");
-
         output.append(ROW_2);
         output.append(SET_BG_COLOR_DARK_GREY+WHITE_PAWN+RESET_BG_COLOR);
         output.append(SET_BG_COLOR_LIGHT_GREY+WHITE_PAWN+RESET_BG_COLOR);
@@ -32,12 +31,10 @@ public class BoardPrinter {
         output.append(SET_BG_COLOR_DARK_GREY+WHITE_PAWN+RESET_BG_COLOR);
         output.append(SET_BG_COLOR_LIGHT_GREY+WHITE_PAWN+RESET_BG_COLOR);
         output.append("\n");
-
-        output.append(ROW_3+EMPTY_LIGHT_SQUARE+EMPTY_DARK_SQUARE+EMPTY_LIGHT_SQUARE+EMPTY_DARK_SQUARE+EMPTY_LIGHT_SQUARE+EMPTY_DARK_SQUARE+EMPTY_LIGHT_SQUARE+EMPTY_DARK_SQUARE+"\n");
-        output.append(ROW_4+EMPTY_DARK_SQUARE+EMPTY_LIGHT_SQUARE+EMPTY_DARK_SQUARE+EMPTY_LIGHT_SQUARE+EMPTY_DARK_SQUARE+EMPTY_LIGHT_SQUARE+EMPTY_DARK_SQUARE+EMPTY_LIGHT_SQUARE+"\n");
-        output.append(ROW_5+EMPTY_LIGHT_SQUARE+EMPTY_DARK_SQUARE+EMPTY_LIGHT_SQUARE+EMPTY_DARK_SQUARE+EMPTY_LIGHT_SQUARE+EMPTY_DARK_SQUARE+EMPTY_LIGHT_SQUARE+EMPTY_DARK_SQUARE+"\n");
-        output.append(ROW_6+EMPTY_DARK_SQUARE+EMPTY_LIGHT_SQUARE+EMPTY_DARK_SQUARE+EMPTY_LIGHT_SQUARE+EMPTY_DARK_SQUARE+EMPTY_LIGHT_SQUARE+EMPTY_DARK_SQUARE+EMPTY_LIGHT_SQUARE+"\n");
-
+        output.append(ROW_3+emptyLightStartRow()+"\n");
+        output.append(ROW_4+emptyDarkStartRow()+"\n");
+        output.append(ROW_5+emptyLightStartRow()+"\n");
+        output.append(ROW_6+emptyDarkStartRow()+"\n");
         output.append(ROW_7);
         output.append(SET_BG_COLOR_LIGHT_GREY+BLACK_PAWN+RESET_BG_COLOR);
         output.append(SET_BG_COLOR_DARK_GREY+BLACK_PAWN+RESET_BG_COLOR);
@@ -48,7 +45,6 @@ public class BoardPrinter {
         output.append(SET_BG_COLOR_LIGHT_GREY+BLACK_PAWN+RESET_BG_COLOR);
         output.append(SET_BG_COLOR_DARK_GREY+BLACK_PAWN+RESET_BG_COLOR);
         output.append("\n");
-
         output.append(ROW_8);
         output.append(SET_BG_COLOR_DARK_GREY+BLACK_ROOK+RESET_BG_COLOR);
         output.append(SET_BG_COLOR_LIGHT_GREY+BLACK_KNIGHT+RESET_BG_COLOR);
@@ -59,7 +55,6 @@ public class BoardPrinter {
         output.append(SET_BG_COLOR_DARK_GREY+BLACK_KNIGHT+RESET_BG_COLOR);
         output.append(SET_BG_COLOR_LIGHT_GREY+BLACK_ROOK+RESET_BG_COLOR);
         output.append("\n");
-
         System.out.println(output);
 
         output = new StringBuilder();
@@ -86,10 +81,10 @@ public class BoardPrinter {
         output.append(SET_BG_COLOR_LIGHT_GREY+BLACK_PAWN+RESET_BG_COLOR);
         output.append("\n");
 
-        output.append(ROW_6+EMPTY_LIGHT_SQUARE+EMPTY_DARK_SQUARE+EMPTY_LIGHT_SQUARE+EMPTY_DARK_SQUARE+EMPTY_LIGHT_SQUARE+EMPTY_DARK_SQUARE+EMPTY_LIGHT_SQUARE+EMPTY_DARK_SQUARE+"\n");
-        output.append(ROW_5+EMPTY_DARK_SQUARE+EMPTY_LIGHT_SQUARE+EMPTY_DARK_SQUARE+EMPTY_LIGHT_SQUARE+EMPTY_DARK_SQUARE+EMPTY_LIGHT_SQUARE+EMPTY_DARK_SQUARE+EMPTY_LIGHT_SQUARE+"\n");
-        output.append(ROW_4+EMPTY_LIGHT_SQUARE+EMPTY_DARK_SQUARE+EMPTY_LIGHT_SQUARE+EMPTY_DARK_SQUARE+EMPTY_LIGHT_SQUARE+EMPTY_DARK_SQUARE+EMPTY_LIGHT_SQUARE+EMPTY_DARK_SQUARE+"\n");
-        output.append(ROW_3+EMPTY_DARK_SQUARE+EMPTY_LIGHT_SQUARE+EMPTY_DARK_SQUARE+EMPTY_LIGHT_SQUARE+EMPTY_DARK_SQUARE+EMPTY_LIGHT_SQUARE+EMPTY_DARK_SQUARE+EMPTY_LIGHT_SQUARE+"\n");
+        output.append(ROW_6+emptyLightStartRow()+"\n");
+        output.append(ROW_5+emptyDarkStartRow()+"\n");
+        output.append(ROW_4+emptyLightStartRow()+"\n");
+        output.append(ROW_3+emptyDarkStartRow()+"\n");
 
         output.append(ROW_2);
         output.append(SET_BG_COLOR_LIGHT_GREY+WHITE_PAWN+RESET_BG_COLOR);
@@ -113,5 +108,31 @@ public class BoardPrinter {
         output.append(SET_BG_COLOR_LIGHT_GREY+WHITE_ROOK+RESET_BG_COLOR);
         output.append("\n");
         System.out.println(output);
+    }
+
+    private String emptyLightStartRow() {
+        StringBuilder output = new StringBuilder();
+        output.append(EMPTY_LIGHT_SQUARE+
+                EMPTY_DARK_SQUARE+
+                EMPTY_LIGHT_SQUARE+
+                EMPTY_DARK_SQUARE+
+                EMPTY_LIGHT_SQUARE+
+                EMPTY_DARK_SQUARE+
+                EMPTY_LIGHT_SQUARE+
+                EMPTY_DARK_SQUARE);
+        return output.toString();
+    }
+
+    private String emptyDarkStartRow() {
+        StringBuilder output = new StringBuilder();
+        output.append(EMPTY_DARK_SQUARE+
+                EMPTY_LIGHT_SQUARE+
+                EMPTY_DARK_SQUARE+
+                EMPTY_LIGHT_SQUARE+
+                EMPTY_DARK_SQUARE+
+                EMPTY_LIGHT_SQUARE+
+                EMPTY_DARK_SQUARE+
+                EMPTY_LIGHT_SQUARE);
+        return output.toString();
     }
 }
