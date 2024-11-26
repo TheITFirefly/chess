@@ -65,6 +65,8 @@ public class EscapeSequences {
     public static final String EMPTY_DARK_SQUARE = SET_BG_COLOR_DARK_GREY+EMPTY+RESET_BG_COLOR;
     public static final String EMPTY_LIGHT_SQUARE = SET_BG_COLOR_LIGHT_GREY+EMPTY+RESET_BG_COLOR;
     public static final String EMPTY_BORDER_SQUARE = SET_BG_COLOR_BLACK+EMPTY+RESET_BG_COLOR;
+    public static final String EMPTY_DARK_HIGHLIGHT_SQUARE = SET_BG_COLOR_DARK_GREEN+RESET_BG_COLOR;
+    public static final String EMPTY_LIGHT_HIGHLIGHT_SQUARE = SET_BG_COLOR_GREEN+RESET_BG_COLOR;
 
     // Column labels
     public static final String COLUMN_A = SET_BG_COLOR_BLACK+" A "+RESET_BG_COLOR;
@@ -85,6 +87,34 @@ public class EscapeSequences {
     public static final String ROW_6 = SET_BG_COLOR_BLACK+ " 6 " +RESET_BG_COLOR;
     public static final String ROW_7 = SET_BG_COLOR_BLACK+ " 7 " +RESET_BG_COLOR;
     public static final String ROW_8 = SET_BG_COLOR_BLACK+ " 8 " +RESET_BG_COLOR;
+
+    // Piece highlights
+    public static final String BLACK_HIGHLIGHT_PAWN = SET_BG_COLOR_YELLOW+BLACK_PAWN+RESET_BG_COLOR;
+    public static final String WHITE_HIGHLIGHT_PAWN = SET_BG_COLOR_YELLOW+WHITE_PAWN+RESET_BG_COLOR;
+    public static final String BLACK_HIGHLIGHT_ROOK = SET_BG_COLOR_YELLOW+BLACK_ROOK+RESET_BG_COLOR;
+    public static final String WHITE_HIGHLIGHT_ROOK = SET_BG_COLOR_YELLOW+WHITE_ROOK+RESET_BG_COLOR;
+    public static final String BLACK_HIGHLIGHT_BISHOP = SET_BG_COLOR_YELLOW+BLACK_BISHOP+RESET_BG_COLOR;
+    public static final String WHITE_HIGHLIGHT_BISHOP = SET_BG_COLOR_YELLOW+WHITE_BISHOP+RESET_BG_COLOR;
+    public static final String BLACK_HIGHLIGHT_KNIGHT = SET_BG_COLOR_YELLOW+BLACK_KNIGHT+RESET_BG_COLOR;
+    public static final String WHITE_HIGHLIGHT_KNIGHT = SET_BG_COLOR_YELLOW+WHITE_KNIGHT+RESET_BG_COLOR;
+    public static final String BLACK_HIGHLIGHT_QUEEN = SET_BG_COLOR_YELLOW+BLACK_QUEEN+RESET_BG_COLOR;
+    public static final String WHITE_HIGHLIGHT_QUEEN = SET_BG_COLOR_YELLOW+WHITE_QUEEN+RESET_BG_COLOR;
+    public static final String BLACK_HIGHLIGHT_KING = SET_BG_COLOR_YELLOW+BLACK_KING+RESET_BG_COLOR;
+    public static final String WHITE_HIGHLIGHT_KING = SET_BG_COLOR_YELLOW+WHITE_KING+RESET_BG_COLOR;
+
+    //Attacked pieces
+    public static final String BLACK_ATTACKED_PAWN = SET_BG_COLOR_RED+BLACK_PAWN+RESET_BG_COLOR;
+    public static final String WHITE_ATTACKED_PAWN = SET_BG_COLOR_RED+WHITE_PAWN+RESET_BG_COLOR;
+    public static final String BLACK_ATTACKED_ROOK = SET_BG_COLOR_RED+BLACK_ROOK+RESET_BG_COLOR;
+    public static final String WHITE_ATTACKED_ROOK = SET_BG_COLOR_RED+WHITE_ROOK+RESET_BG_COLOR;
+    public static final String BLACK_ATTACKED_KNIGHT = SET_BG_COLOR_RED+BLACK_KNIGHT+RESET_BG_COLOR;
+    public static final String WHITE_ATTACKED_KNIGHT = SET_BG_COLOR_RED+WHITE_KNIGHT+RESET_BG_COLOR;
+    public static final String BLACK_ATTACKED_BISHOP = SET_BG_COLOR_RED+BLACK_BISHOP+RESET_BG_COLOR;
+    public static final String WHITE_ATTACKED_BISHOP = SET_BG_COLOR_RED+WHITE_BISHOP+RESET_BG_COLOR;
+    public static final String BLACK_ATTACKED_QUEEN = SET_BG_COLOR_RED+BLACK_QUEEN+RESET_BG_COLOR;
+    public static final String WHITE_ATTACKED_QUEEN = SET_BG_COLOR_RED+WHITE_QUEEN+RESET_BG_COLOR;
+    public static final String BLACK_ATTACKED_KING = SET_BG_COLOR_RED+BLACK_KING+RESET_BG_COLOR;
+    public static final String WHITE_ATTACKED_KING = SET_BG_COLOR_RED+WHITE_KING+RESET_BG_COLOR;
 
     public static String moveCursorToLocation(int x, int y) { return UNICODE_ESCAPE + "[" + y + ";" + x + "H"; }
 }
