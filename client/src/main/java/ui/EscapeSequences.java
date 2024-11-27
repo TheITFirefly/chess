@@ -10,6 +10,7 @@ public class EscapeSequences {
 
     public static final String ERASE_SCREEN = UNICODE_ESCAPE + "[H" + UNICODE_ESCAPE + "[2J";
     public static final String ERASE_LINE = UNICODE_ESCAPE + "[2K";
+    public static String moveCursorToLocation(int x, int y) { return UNICODE_ESCAPE + "[" + y + ";" + x + "H"; }
 
     public static final String SET_TEXT_BOLD = UNICODE_ESCAPE + "[1m";
     public static final String SET_TEXT_FAINT = UNICODE_ESCAPE + "[2m";
@@ -68,6 +69,34 @@ public class EscapeSequences {
     public static final String EMPTY_DARK_HIGHLIGHT_SQUARE = SET_BG_COLOR_DARK_GREEN+RESET_BG_COLOR;
     public static final String EMPTY_LIGHT_HIGHLIGHT_SQUARE = SET_BG_COLOR_GREEN+RESET_BG_COLOR;
 
+    // Black filled squares
+    public static final String DARK_SQUARE_BLACK_PAWN = SET_BG_COLOR_DARK_GREY+BLACK_PAWN+RESET_BG_COLOR;
+    public static final String LIGHT_SQUARE_BLACK_PAWN = SET_BG_COLOR_LIGHT_GREY+BLACK_PAWN+RESET_BG_COLOR;
+    public static final String DARK_SQUARE_BLACK_ROOK = SET_BG_COLOR_DARK_GREY+BLACK_ROOK+RESET_BG_COLOR;
+    public static final String LIGHT_SQUARE_BLACK_ROOK = SET_BG_COLOR_LIGHT_GREY+BLACK_ROOK+RESET_BG_COLOR;
+    public static final String DARK_SQUARE_BLACK_KNIGHT = SET_BG_COLOR_DARK_GREY+BLACK_KNIGHT+RESET_BG_COLOR;
+    public static final String LIGHT_SQUARE_BLACK_KNIGHT = SET_BG_COLOR_LIGHT_GREY+BLACK_KNIGHT+RESET_BG_COLOR;
+    public static final String DARK_SQUARE_BLACK_BISHOP = SET_BG_COLOR_DARK_GREY+BLACK_BISHOP+RESET_BG_COLOR;
+    public static final String LIGHT_SQUARE_BLACK_BISHOP = SET_BG_COLOR_LIGHT_GREY+BLACK_BISHOP+RESET_BG_COLOR;
+    public static final String DARK_SQUARE_BLACK_QUEEN = SET_BG_COLOR_DARK_GREY+BLACK_QUEEN+RESET_BG_COLOR;
+    public static final String LIGHT_SQUARE_BLACK_QUEEN = SET_BG_COLOR_LIGHT_GREY+BLACK_QUEEN+RESET_BG_COLOR;
+    public static final String DARK_SQUARE_BLACK_KING = SET_BG_COLOR_DARK_GREY+BLACK_KING+RESET_BG_COLOR;
+    public static final String LIGHT_SQUARE_BLACK_KING = SET_BG_COLOR_LIGHT_GREY+BLACK_KING+RESET_BG_COLOR;
+
+    // White filled squares
+    public static final String DARK_SQUARE_WHITE_PAWN = SET_BG_COLOR_DARK_GREY+WHITE_PAWN+RESET_BG_COLOR;
+    public static final String LIGHT_SQUARE_WHITE_PAWN = SET_BG_COLOR_LIGHT_GREY+WHITE_PAWN+RESET_BG_COLOR;
+    public static final String DARK_SQUARE_WHITE_ROOK = SET_BG_COLOR_DARK_GREY+WHITE_ROOK+RESET_BG_COLOR;
+    public static final String LIGHT_SQUARE_WHITE_ROOK = SET_BG_COLOR_LIGHT_GREY+WHITE_ROOK+RESET_BG_COLOR;
+    public static final String DARK_SQUARE_WHITE_KNIGHT = SET_BG_COLOR_DARK_GREY+WHITE_KNIGHT+RESET_BG_COLOR;
+    public static final String LIGHT_SQUARE_WHITE_KNIGHT = SET_BG_COLOR_LIGHT_GREY+WHITE_KNIGHT+RESET_BG_COLOR;
+    public static final String DARK_SQUARE_WHITE_BISHOP = SET_BG_COLOR_DARK_GREY+WHITE_BISHOP+RESET_BG_COLOR;
+    public static final String LIGHT_SQUARE_WHITE_BISHOP = SET_BG_COLOR_LIGHT_GREY+WHITE_BISHOP+RESET_BG_COLOR;
+    public static final String DARK_SQUARE_WHITE_QUEEN = SET_BG_COLOR_DARK_GREY+WHITE_QUEEN+RESET_BG_COLOR;
+    public static final String LIGHT_SQUARE_WHITE_QUEEN = SET_BG_COLOR_LIGHT_GREY+WHITE_QUEEN+RESET_BG_COLOR;
+    public static final String DARK_SQUARE_WHITE_KING = SET_BG_COLOR_DARK_GREY+WHITE_KING+RESET_BG_COLOR;
+    public static final String LIGHT_SQUARE_WHITE_KING = SET_BG_COLOR_LIGHT_GREY+WHITE_KING+RESET_BG_COLOR;
+
     // Column labels
     public static final String COLUMN_A = SET_BG_COLOR_BLACK+" A "+RESET_BG_COLOR;
     public static final String COLUMN_B = SET_BG_COLOR_BLACK+" B "+RESET_BG_COLOR;
@@ -116,5 +145,4 @@ public class EscapeSequences {
     public static final String BLACK_ATTACKED_KING = SET_BG_COLOR_RED+BLACK_KING+RESET_BG_COLOR;
     public static final String WHITE_ATTACKED_KING = SET_BG_COLOR_RED+WHITE_KING+RESET_BG_COLOR;
 
-    public static String moveCursorToLocation(int x, int y) { return UNICODE_ESCAPE + "[" + y + ";" + x + "H"; }
 }
