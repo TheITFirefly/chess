@@ -20,7 +20,9 @@ public class GameplayREPL {
         System.out.println("Gameplay not yet implemented");
         // Also print out the initial board with both colors
         BoardPrinter boardPrinter = new BoardPrinter();
+        game.getBoard().addPiece(new ChessPosition(3,3),new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.QUEEN));
         boardPrinter.printBoard(game.getBoard(), ChessGame.TeamColor.WHITE);
+        boardPrinter.highlightPiece(game.getBoard(), ChessGame.TeamColor.WHITE,new ChessPosition(3,3));
     }
 
     public void updateGame(ChessGame game) {
