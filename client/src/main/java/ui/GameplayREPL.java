@@ -21,7 +21,11 @@ public class GameplayREPL {
         // Also print out the initial board with both colors
         BoardPrinter boardPrinter = new BoardPrinter();
         game.getBoard().addPiece(new ChessPosition(3,3),new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.QUEEN));
-        boardPrinter.printBoard(game.getBoard(), ChessGame.TeamColor.WHITE);
+        boardPrinter.renderBoard(boardPrinter.highlightLegalMoves(game,new ChessPosition(3,3)), ChessGame.TeamColor.WHITE);
+        System.out.println();
+        System.out.println();
+        System.out.println();
+        boardPrinter.renderBoard(boardPrinter.highlightLegalMoves(game,new ChessPosition(3,3)), ChessGame.TeamColor.BLACK);
     }
 
     public void updateGame(ChessGame game) {
