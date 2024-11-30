@@ -40,9 +40,13 @@ public class JoinGameService {
 
             // Check if the requested color is already taken
             if (requestedColor.equals("WHITE") && whiteUsername != null) {
-                return new DataTransfer<>(new TakenErrorResponse("Error: White color already taken"));
+                if (!whiteUsername.equals(authData.username())) {
+                    return new DataTransfer<>(new TakenErrorResponse("Error: White color already taken"));
+                }
             } else if (requestedColor.equals("BLACK") && blackUsername != null) {
-                return new DataTransfer<>(new TakenErrorResponse("Error: Black color already taken"));
+                if (!blackUsername.equals(authData.username())) {
+                    return new DataTransfer<>(new TakenErrorResponse("Error: Black color already taken"));
+                }
             }
 
             // Assign player to the requested color if available
