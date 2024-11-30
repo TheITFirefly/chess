@@ -15,7 +15,8 @@ public class Main {
         System.out.print("Do you want to use a custom server address? (yes/no) Default (no): ");
         String useCustomServer = scanner.nextLine().trim().toLowerCase();
 
-        ServerFacade facade;
+        // Default to localhost and 8080
+        ServerFacade facade = new ServerFacade();
 
         if (useCustomServer.equals("yes")) {
             // Ask for custom server address and port
@@ -33,25 +34,15 @@ public class Main {
                     port = Integer.parseInt(portInput);
                 } catch (NumberFormatException e) {
                     System.out.println("Port was not a number. Using default");
-                    port = 8080;
-                } {
-
                 }
-                facade = new ServerFacade(serverAddress, port);
+
             } else if (!serverAddress.isEmpty()) {
-                // Only server address provided
-                facade = new ServerFacade(serverAddress);
+                facade.setServerAddress(serverAddress);
             } else if (!portInput.isEmpty()) {
                 // Only port provided
                 int port = Integer.parseInt(portInput);
-                facade = new ServerFacade(port);
-            } else {
-                // Neither provided; use defaults
-                facade = new ServerFacade();
+                facade.setServerPort(port);
             }
-        } else {
-            // Use default server and port
-            facade = new ServerFacade();
         }
 
         // Confirm server connection details
