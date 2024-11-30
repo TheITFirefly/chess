@@ -1,6 +1,7 @@
 package ui;
 
 import java.util.Collection;
+import java.util.Objects;
 
 import chess.*;
 
@@ -9,30 +10,14 @@ import static ui.EscapeSequences.*;
 public class BoardPrinter {
     public String[][] highlightLegalMoves(ChessGame game, ChessPosition position) {
         ChessBoard board = game.getBoard();
-        String[][] boardRep = new String[8][8];
-
         // Initialize the boardRep with the current pieces or empty squares
-        for (int row = 1; row <= 8; row++) {
-            for (int col = 1; col <= 8; col++) {
-                ChessPosition pos = new ChessPosition(row, col);
-                ChessPiece piece = board.getPiece(pos);
-                boolean isDarkSquare = (row + col) % 2 == 0;
+        String[][] boardRep = importBoard(board);
 
-                if (piece == null) {
-                    // Empty square
-                    boardRep[row - 1][col - 1] = isDarkSquare
-                            ? EscapeSequences.EMPTY_DARK_SQUARE
-                            : EscapeSequences.EMPTY_LIGHT_SQUARE;
-                } else {
-                    // Square with a piece
-                    boardRep[row - 1][col - 1] = renderPiece(piece, isDarkSquare);
-                }
-            }
-        }
         // Position should be in bounds
         if (!positionInBounds(position)) {
             return boardRep;
         }
+
         // Get all valid moves for the selected piece
         Collection<ChessMove> validMoves = game.validMoves(position);
         // Highlight the selected piece
@@ -135,7 +120,15 @@ public class BoardPrinter {
         return SET_BG_COLOR_YELLOW + pieceRep + RESET_BG_COLOR;
     }
 
+    private String renderChangedPiece(ChessPiece piece) {
+        String pieceRep = getPieceRepresentation(piece);
+        return SET_BG_COLOR_BLUE + pieceRep + RESET_BG_COLOR;
+    }
+
     private String getPieceRepresentation(ChessPiece piece) {
+        if (piece == null) {
+            return EMPTY;
+        }
         if (piece.getTeamColor() == ChessGame.TeamColor.WHITE) {
             return switch (piece.getPieceType()) {
                 case KING -> WHITE_KING;
@@ -175,5 +168,54 @@ public class BoardPrinter {
         boolean rowInBounds = 1 <= position.getRow() && position.getRow() <= 8;
         boolean colInBounds = 1 <= position.getColumn() && position.getColumn() <= 8;
         return rowInBounds && colInBounds;
+    }
+
+    public String[][] highlightBoardDifferences(ChessBoard startBoard, ChessBoard endBoard) {
+        boolean[][] pieceChanged = new boolean[8][8];
+        String[][] retBoardRep = new String[8][8];
+        String[][] startBoardRep = importBoard(startBoard);
+        String[][] endBoardRep = importBoard(endBoard);
+
+        for (int row = 0; row <= 7; row++) {
+            for (int col = 0; col <= 7; col++) {
+                pieceChanged[row][col] = !Objects.equals(startBoardRep[row][col], endBoardRep[row][col]);
+            }
+        }
+
+        for (int row = 0; row <= 7; row++) {
+            for (int col = 0; col <= 7; col++) {
+                boolean changed = pieceChanged[row][col];
+                if (changed) {
+                    ChessPiece piece = endBoard.getPiece(new ChessPosition(row+1,col+1));
+                    retBoardRep[row][col] = renderChangedPiece(piece);
+                } else {
+                    retBoardRep[row][col] = endBoardRep[row][col];
+                }
+            }
+        }
+
+        return retBoardRep;
+    }
+
+    public String[][] importBoard(ChessBoard board) {
+        String[][] boardRep = new String[8][8];
+        for (int row = 1; row <= 8; row++) {
+            for (int col = 1; col <= 8; col++) {
+                ChessPosition pos = new ChessPosition(row, col);
+                ChessPiece piece = board.getPiece(pos);
+                boolean isDarkSquare = (row + col) % 2 == 0;
+
+                if (piece == null) {
+                    // Empty square
+                    boardRep[row - 1][col - 1] = isDarkSquare
+                            ? EscapeSequences.EMPTY_DARK_SQUARE
+                            : EscapeSequences.EMPTY_LIGHT_SQUARE;
+                } else {
+                    // Square with a piece
+                    boardRep[row - 1][col - 1] = renderPiece(piece, isDarkSquare);
+                }
+            }
+        }
+        return boardRep;
     }
 }
