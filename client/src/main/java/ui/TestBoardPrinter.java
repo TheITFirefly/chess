@@ -1,19 +1,28 @@
 package ui;
 
-import chess.ChessBoard;
-import chess.ChessGame;
-import chess.ChessPiece;
-import chess.ChessPosition;
+import chess.*;
 
 public class TestBoardPrinter {
     public static void main(String[] args) {
         ChessGame game = new ChessGame();
         BoardPrinter printer = new BoardPrinter();
-        ChessPosition newQueenPos = new ChessPosition(4,4);
-        ChessPosition badPos = new ChessPosition(2,4);
         ChessPiece whiteQueen = new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.QUEEN);
-        game.getBoard().addPiece(newQueenPos,whiteQueen);
-        var highlighted = printer.highlightLegalMoves(game,badPos);
+        var highlighted = printer.highlightLegalMoves(game,new ChessPosition(2,2));
         printer.renderBoard(highlighted, ChessGame.TeamColor.WHITE);
+        System.out.println();
+        ChessBoard origBoard = new ChessBoard();
+        origBoard.resetBoard();
+        try{
+            game.makeMove(new ChessMove(new ChessPosition(2,2),new ChessPosition(4,2),null));
+        } catch (InvalidMoveException e) {
+            throw new RuntimeException(e);
+        }
+        ChessBoard newBoard = game.getBoard();
+        var changed = printer.highlightBoardDifferences(origBoard,newBoard);
+        printer.renderBoard(changed, ChessGame.TeamColor.WHITE);
+        System.out.println();
+        highlighted = printer.highlightLegalMoves(game,new ChessPosition(2,2));
+        printer.renderBoard(highlighted, ChessGame.TeamColor.WHITE);
+        System.out.println();
     }
 }
