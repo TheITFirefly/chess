@@ -1,6 +1,8 @@
 package ws;
 
 import chess.ChessGame;
+import chess.ChessMove;
+import chess.InvalidMoveException;
 import com.google.gson.Gson;
 import dataaccess.*;
 import errors.AuthNotFoundException;
@@ -12,6 +14,7 @@ import org.eclipse.jetty.websocket.api.annotations.OnWebSocketConnect;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketMessage;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
 import server.model.AuthData;
+import websocket.commands.MakeMoveCommand;
 import websocket.commands.UserGameCommand;
 import websocket.messages.ErrorMessage;
 import websocket.messages.LoadGameMessage;
@@ -42,9 +45,13 @@ public class WebSocketHandler {
     @OnWebSocketMessage
     public void handleMessage(Session session, String commandJson) {
         UserGameCommand command = gson.fromJson(commandJson, UserGameCommand.class);
+        if (command.getCommandType() == UserGameCommand.CommandType.MAKE_MOVE){
+            MakeMoveCommand moveCommand = gson.fromJson(commandJson, MakeMoveCommand.class);
+            handleMakeMove(session, moveCommand);
+            return;
+        }
         switch (command.getCommandType()) {
             case CONNECT -> handleConnect(session, command);
-            case MAKE_MOVE -> handleMakeMove(session, command);
             case LEAVE -> handleLeave(session, command);
             case RESIGN -> handleResign(session, command);
         }
@@ -90,33 +97,46 @@ public class WebSocketHandler {
         }
     }
 
-    private void handleMakeMove(Session session, UserGameCommand command) {
+    private void handleMakeMove(Session session, MakeMoveCommand command) {
         String authToken = command.getAuthToken();
         Integer gameID = command.getGameID();
+        ChessMove move = command.getMove();
         try {
             SessionKey key = createSessionKey(authToken, gameID);
+            if (key.getRole() == SessionKey.Role.OBSERVER) {
+                ErrorMessage errorMessage = new ErrorMessage("Error: Observers can't make moves");
+                String errorMessageJson = gson.toJson(errorMessage);
+                connectionManager.sendMessage(session, errorMessageJson);
+                return;
+            }
             GameData gameData = null;
+            ChessGame game =null;
             try {
                 gameData = gameDAO.getGame(gameID);
+                game = gameData.game();
             } catch (DataAccessException e) {
                 ErrorMessage errorMessage = new ErrorMessage("Error: Failed to fetch game");
                 String errorMessageJson = gson.toJson(errorMessage);
                 connectionManager.sendMessage(session, errorMessageJson);
                 return;
             }
-            if (gameData == null) {
+            if (gameData == null || game == null) {
                 ErrorMessage errorMessage = new ErrorMessage("Error: Failed to fetch game");
                 String errorMessageJson = gson.toJson(errorMessage);
                 connectionManager.sendMessage(session, errorMessageJson);
                 return;
             }
-
+            game.makeMove(move);
         } catch (AuthNotFoundException e) {
             ErrorMessage errorMessage = new ErrorMessage("Error: Bad authentication");
             String errorMessageJson = gson.toJson(errorMessage);
             connectionManager.sendMessage(session, errorMessageJson);
         } catch (GameNotFoundException e) {
             ErrorMessage errorMessage = new ErrorMessage("Error: Bad Game ID");
+            String errorMessageJson = gson.toJson(errorMessage);
+            connectionManager.sendMessage(session, errorMessageJson);
+        } catch (InvalidMoveException e) {
+            ErrorMessage errorMessage = new ErrorMessage("Error:" + e.getMessage());
             String errorMessageJson = gson.toJson(errorMessage);
             connectionManager.sendMessage(session, errorMessageJson);
         }
