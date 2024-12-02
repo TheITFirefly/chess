@@ -21,7 +21,7 @@ import java.util.Objects;
 
 @WebSocket
 public class WebSocketHandler {
-    private static final Gson gson = new Gson();
+    private final Gson gson = new Gson();
     private final ConnectionManager connectionManager = new ConnectionManager();
     AuthDAO authDAO;
     UserDAO userDAO;

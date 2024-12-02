@@ -31,8 +31,8 @@ public class SessionKey {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof SessionKey)) return false;
+        if (this == o) {return true;}
+        if (!(o instanceof SessionKey)) {return false;}
         SessionKey that = (SessionKey) o;
         return role == that.role &&
                 Objects.equals(gameID, that.gameID) &&
