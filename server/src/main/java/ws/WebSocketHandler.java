@@ -110,7 +110,7 @@ public class WebSocketHandler {
                 return;
             }
             GameData gameData = null;
-            ChessGame game =null;
+            ChessGame game = null;
             try {
                 gameData = gameDAO.getGame(gameID);
                 game = gameData.game();
@@ -122,6 +122,12 @@ public class WebSocketHandler {
             }
             if (game == null) {
                 ErrorMessage errorMessage = new ErrorMessage("Error: Failed to fetch game");
+                String errorMessageJson = gson.toJson(errorMessage);
+                connectionManager.sendMessage(session, errorMessageJson);
+                return;
+            }
+            if (game.getResignationStatus()) {
+                ErrorMessage errorMessage = new ErrorMessage("Error: Cannot make move. A player has resigned");
                 String errorMessageJson = gson.toJson(errorMessage);
                 connectionManager.sendMessage(session, errorMessageJson);
                 return;
@@ -165,7 +171,65 @@ public class WebSocketHandler {
     }
 
     private void handleResign(Session session, UserGameCommand command) {
-        throw new RuntimeException("not implemented");
+        String authToken = command.getAuthToken();
+        Integer gameID = command.getGameID();
+        try {
+            // Create a session key and identify the user's role in the game
+            SessionKey key = createSessionKey(authToken, gameID);
+
+            if (key.getRole() == SessionKey.Role.OBSERVER) {
+                ErrorMessage errorMessage = new ErrorMessage("Error: Observers can't resign");
+                String errorMessageJson = gson.toJson(errorMessage);
+                connectionManager.sendMessage(session, errorMessageJson);
+                return;
+            }
+
+            // Fetch the game data from the database
+            GameData gameData = gameDAO.getGame(gameID);
+            ChessGame game = gameData.game();
+
+            if (game == null) {
+                ErrorMessage errorMessage = new ErrorMessage("Error: Game not found");
+                String errorMessageJson = gson.toJson(errorMessage);
+                connectionManager.sendMessage(session, errorMessageJson);
+                return;
+            }
+
+            // Check if the game is already over
+            if (game.getResignationStatus()) {
+                ErrorMessage errorMessage = new ErrorMessage("Error: Game is already over. A player has resigned");
+                String errorMessageJson = gson.toJson(errorMessage);
+                connectionManager.sendMessage(session, errorMessageJson);
+                return;
+            }
+
+            // Mark the resignation in the game state
+            game.resign();
+            // Persist the updated game state
+            GameData updatedGameData = new GameData(gameID, gameData.whiteUsername(), gameData.blackUsername(), gameData.gameName(), game);
+            gameDAO.updateGame(updatedGameData);
+
+            // Notify resigning player
+            NotificationMessage resignMessage = new NotificationMessage("You have resigned");
+            String resignJson = gson.toJson(resignMessage);
+            connectionManager.sendMessage(session,resignJson);
+            String resigningPlayer = (key.getRole() == SessionKey.Role.WHITE) ? gameData.whiteUsername() : gameData.blackUsername();
+            String resignationMessage = resigningPlayer + " has resigned.";
+            broadcastNotification(gameID, key, resignationMessage);
+
+        } catch (AuthNotFoundException e) {
+            ErrorMessage errorMessage = new ErrorMessage("Error: Bad authentication");
+            String errorMessageJson = gson.toJson(errorMessage);
+            connectionManager.sendMessage(session, errorMessageJson);
+        } catch (GameNotFoundException e) {
+            ErrorMessage errorMessage = new ErrorMessage("Error: Game not found");
+            String errorMessageJson = gson.toJson(errorMessage);
+            connectionManager.sendMessage(session, errorMessageJson);
+        } catch (DataAccessException e) {
+            ErrorMessage errorMessage = new ErrorMessage("Error: Failed to update game state");
+            String errorMessageJson = gson.toJson(errorMessage);
+            connectionManager.sendMessage(session, errorMessageJson);
+        }
     }
 
     private SessionKey createSessionKey(String authToken, Integer gameID) throws AuthNotFoundException, GameNotFoundException {

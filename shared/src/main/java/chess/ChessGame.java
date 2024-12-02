@@ -89,9 +89,6 @@ public class ChessGame {
      * @throws InvalidMoveException if move is invalid
      */
     public void makeMove(ChessMove move) throws InvalidMoveException {
-        if (resignationStatus) {
-            throw new InvalidMoveException("Unable to make move. A player has resigned");
-        }
         ChessPiece movingPiece = gameBoard.getPiece(move.getStartPosition());
         if (movingPiece == null) {
             throw new InvalidMoveException();
@@ -110,12 +107,8 @@ public class ChessGame {
         }
     }
 
-    public void resign(TeamColor teamColor) throws InvalidMoveException {
-        if (currentTurn != teamColor) {
-            throw new InvalidMoveException("Can't resign during another player's turn");
-        } else {
-            resignationStatus = true;
-        }
+    public void resign() {
+        resignationStatus = true;
     }
 
     /**
