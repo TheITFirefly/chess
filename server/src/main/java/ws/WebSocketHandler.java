@@ -167,7 +167,65 @@ public class WebSocketHandler {
 
 
     private void handleLeave(Session session, UserGameCommand command) {
-        throw new RuntimeException("not implemented");
+        String authToken = command.getAuthToken();
+        Integer gameID = command.getGameID();
+        try {
+            // Create the session key to identify the user and their role in the game
+            SessionKey key = createSessionKey(authToken, gameID);
+
+            // Remove the connection from the ConnectionManager
+            connectionManager.removeConnection(key);
+
+            // Update the database if the leaving user is a player
+            GameData gameData = gameDAO.getGame(gameID); // Fetch current game data
+            String updatedWhitePlayer = gameData.whiteUsername();
+            String updatedBlackPlayer = gameData.blackUsername();
+
+            if (key.getRole() == SessionKey.Role.WHITE) {
+                updatedWhitePlayer = null; // White player is leaving
+            } else if (key.getRole() == SessionKey.Role.BLACK) {
+                updatedBlackPlayer = null; // Black player is leaving
+            }
+
+            // Create a new GameData object with updated player info
+            GameData updatedGameData = new GameData(
+                    gameID,
+                    updatedWhitePlayer,
+                    updatedBlackPlayer,
+                    gameData.gameName(),
+                    gameData.game()
+            );
+
+            // Update the game in the database
+            gameDAO.updateGame(updatedGameData);
+
+            // Notify other clients in the game
+            String leavingPlayer;
+            if (key.getRole() == SessionKey.Role.WHITE) {
+                leavingPlayer = "White player";
+            } else if (key.getRole() == SessionKey.Role.BLACK) {
+                leavingPlayer = "Black player";
+            } else {
+                leavingPlayer = "Observer";
+            }
+
+            String leaveMessage = leavingPlayer + " (" + authToken + ") has left the game.";
+            broadcastNotification(gameID, key, leaveMessage);
+
+            System.out.println("User left: " + key);
+        } catch (AuthNotFoundException e) {
+            ErrorMessage errorMessage = new ErrorMessage("Error: Bad authentication");
+            String errorMessageJson = gson.toJson(errorMessage);
+            connectionManager.sendMessage(session, errorMessageJson);
+        } catch (GameNotFoundException e) {
+            ErrorMessage errorMessage = new ErrorMessage("Error: Bad Game ID");
+            String errorMessageJson = gson.toJson(errorMessage);
+            connectionManager.sendMessage(session, errorMessageJson);
+        } catch (DataAccessException e) {
+            ErrorMessage errorMessage = new ErrorMessage("Error: Database access failed");
+            String errorMessageJson = gson.toJson(errorMessage);
+            connectionManager.sendMessage(session, errorMessageJson);
+        }
     }
 
     private void handleResign(Session session, UserGameCommand command) {
