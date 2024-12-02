@@ -120,13 +120,26 @@ public class WebSocketHandler {
                 connectionManager.sendMessage(session, errorMessageJson);
                 return;
             }
-            if (gameData == null || game == null) {
+            if (game == null) {
                 ErrorMessage errorMessage = new ErrorMessage("Error: Failed to fetch game");
                 String errorMessageJson = gson.toJson(errorMessage);
                 connectionManager.sendMessage(session, errorMessageJson);
                 return;
             }
+            ChessGame.TeamColor curTurn = game.getTeamTurn();
+            SessionKey.Role role = key.getRole();
+            if (curTurn == ChessGame.TeamColor.WHITE && role != SessionKey.Role.WHITE ||
+                    curTurn == ChessGame.TeamColor.BLACK && role != SessionKey.Role.BLACK) {
+                ErrorMessage errorMessage = new ErrorMessage("Error: Not allowed to make move for other players");
+                String errorMessageJson = gson.toJson(errorMessage);
+                connectionManager.sendMessage(session, errorMessageJson);
+                return;
+            }
             game.makeMove(move);
+            GameData updatedGame = new GameData(gameID, gameData.whiteUsername(), gameData.blackUsername(),gameData.gameName(),game);
+            gameDAO.updateGame(updatedGame);
+            broadcastLoadGame(gameID,game);
+            broadcastNotification(gameID,key,"A move was just made");
         } catch (AuthNotFoundException e) {
             ErrorMessage errorMessage = new ErrorMessage("Error: Bad authentication");
             String errorMessageJson = gson.toJson(errorMessage);
@@ -136,6 +149,10 @@ public class WebSocketHandler {
             String errorMessageJson = gson.toJson(errorMessage);
             connectionManager.sendMessage(session, errorMessageJson);
         } catch (InvalidMoveException e) {
+            ErrorMessage errorMessage = new ErrorMessage("Error:" + e.getMessage());
+            String errorMessageJson = gson.toJson(errorMessage);
+            connectionManager.sendMessage(session, errorMessageJson);
+        } catch (DataAccessException e) {
             ErrorMessage errorMessage = new ErrorMessage("Error:" + e.getMessage());
             String errorMessageJson = gson.toJson(errorMessage);
             connectionManager.sendMessage(session, errorMessageJson);
@@ -190,6 +207,16 @@ public class WebSocketHandler {
         // Iterate over all connections in the ConnectionManager
         connectionManager.getConnections().forEach((key, session) -> {
             if (key.getGameID().equals(gameID) && !key.equals(senderKey)) {
+                connectionManager.sendMessage(session, notificationJson);
+            }
+        });
+    }
+
+    private void broadcastLoadGame(Integer gameID, ChessGame messageContent) {
+        LoadGameMessage loadGameMessage = new LoadGameMessage(messageContent);
+        String notificationJson = gson.toJson(loadGameMessage);
+        connectionManager.getConnections().forEach((key, session) -> {
+            if (key.getGameID().equals(gameID)) {
                 connectionManager.sendMessage(session, notificationJson);
             }
         });
