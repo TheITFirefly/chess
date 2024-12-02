@@ -16,10 +16,6 @@ public class ConnectionManager {
         connections.remove(key);
     }
 
-    public Session getSession(SessionKey key) {
-        return connections.get(key);
-    }
-
     public ConcurrentHashMap<SessionKey, Session> getConnections() {
         return connections;
     }

@@ -13,6 +13,7 @@ import org.eclipse.jetty.websocket.api.annotations.OnWebSocketMessage;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
 import server.model.AuthData;
 import websocket.commands.UserGameCommand;
+import websocket.messages.ErrorMessage;
 import websocket.messages.LoadGameMessage;
 import websocket.messages.NotificationMessage;
 import websocket.messages.ServerMessage;
@@ -41,40 +42,35 @@ public class WebSocketHandler {
     @OnWebSocketMessage
     public void handleMessage(Session session, String commandJson) {
         UserGameCommand command = gson.fromJson(commandJson, UserGameCommand.class);
-        try {
-            switch (command.getCommandType()) {
-                case CONNECT -> handleConnect(session, command);
-//                case MAKE_MOVE -> handleMakeMove(session, command);
-                case LEAVE -> handleLeave(session, command);
-                case RESIGN -> handleResign(session, command);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            // Optionally send error response to the client
+        switch (command.getCommandType()) {
+            case CONNECT -> handleConnect(session, command);
+            case MAKE_MOVE -> handleMakeMove(session, command);
+            case LEAVE -> handleLeave(session, command);
+            case RESIGN -> handleResign(session, command);
         }
     }
 
     private void handleConnect(Session session, UserGameCommand command) {
         String authToken = command.getAuthToken();
         Integer gameID = command.getGameID();
-
         try {
-            // Create the session key
             SessionKey key = createSessionKey(authToken, gameID);
-            connectionManager.addConnection(key, session);
-
-            // Send LOAD_GAME message to the root client
             ChessGame game = null;
             try {
                 game = gameDAO.getGame(gameID).game();
             } catch (DataAccessException e) {
-                // Need to send an ERROR message instead
-                throw new RuntimeException(e.getMessage());
+                ErrorMessage errorMessage = new ErrorMessage("Error: Failed to fetch game");
+                String errorMessageJson = gson.toJson(errorMessage);
+                connectionManager.sendMessage(session, errorMessageJson);
+                return;
             }
             if (game == null){
-                // Need to send an ERROR message instead
-                throw new RuntimeException("Error occurred fetching game");
+                ErrorMessage errorMessage = new ErrorMessage("Error: Failed to fetch game");
+                String errorMessageJson = gson.toJson(errorMessage);
+                connectionManager.sendMessage(session, errorMessageJson);
+                return;
             }
+            connectionManager.addConnection(key, session);
             LoadGameMessage loadGameMessage = new LoadGameMessage(game);
             String loadGameJson = gson.toJson(loadGameMessage);
             connectionManager.sendMessage(session, loadGameJson);
@@ -83,15 +79,49 @@ public class WebSocketHandler {
             broadcastNotification(gameID, key, key.getRole() + " player " + key.getAuthToken() + " connected.");
 
             System.out.println("Connected: " + key);
-        } catch (AuthNotFoundException | GameNotFoundException e) {
-            // Send error message to root client
-            ServerMessage errorMessage = new ServerMessage(ServerMessage.ServerMessageType.ERROR);
-            String errorJson = gson.toJson(errorMessage);
-            connectionManager.sendMessage(session, errorJson);
-
-            System.out.println("Error handling connect: " + e.getMessage());
+        } catch (AuthNotFoundException e) {
+            ErrorMessage errorMessage = new ErrorMessage("Error: Bad authentication");
+            String errorMessageJson = gson.toJson(errorMessage);
+            connectionManager.sendMessage(session, errorMessageJson);
+        } catch (GameNotFoundException e) {
+            ErrorMessage errorMessage = new ErrorMessage("Error: Bad Game ID");
+            String errorMessageJson = gson.toJson(errorMessage);
+            connectionManager.sendMessage(session, errorMessageJson);
         }
     }
+
+    private void handleMakeMove(Session session, UserGameCommand command) {
+        String authToken = command.getAuthToken();
+        Integer gameID = command.getGameID();
+        try {
+            SessionKey key = createSessionKey(authToken, gameID);
+            GameData gameData = null;
+            try {
+                gameData = gameDAO.getGame(gameID);
+            } catch (DataAccessException e) {
+                ErrorMessage errorMessage = new ErrorMessage("Error: Failed to fetch game");
+                String errorMessageJson = gson.toJson(errorMessage);
+                connectionManager.sendMessage(session, errorMessageJson);
+                return;
+            }
+            if (gameData == null) {
+                ErrorMessage errorMessage = new ErrorMessage("Error: Failed to fetch game");
+                String errorMessageJson = gson.toJson(errorMessage);
+                connectionManager.sendMessage(session, errorMessageJson);
+                return;
+            }
+
+        } catch (AuthNotFoundException e) {
+            ErrorMessage errorMessage = new ErrorMessage("Error: Bad authentication");
+            String errorMessageJson = gson.toJson(errorMessage);
+            connectionManager.sendMessage(session, errorMessageJson);
+        } catch (GameNotFoundException e) {
+            ErrorMessage errorMessage = new ErrorMessage("Error: Bad Game ID");
+            String errorMessageJson = gson.toJson(errorMessage);
+            connectionManager.sendMessage(session, errorMessageJson);
+        }
+    }
+
 
     private void handleLeave(Session session, UserGameCommand command) {
         throw new RuntimeException("not implemented");
@@ -105,6 +135,7 @@ public class WebSocketHandler {
         String username;
         try {
             AuthData auth = authDAO.getAuth(authToken);
+            if (auth == null) {throw new AuthNotFoundException("No auth exists");}
             username = auth.username();
         } catch (DataAccessException e) {
             throw new AuthNotFoundException(e.getMessage());
