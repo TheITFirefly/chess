@@ -12,11 +12,17 @@ import java.util.Collection;
 public class ChessGame {
     private ChessBoard gameBoard;
     private TeamColor currentTurn;
+    private boolean resignationStatus;
 
     public ChessGame() {
         gameBoard = new ChessBoard();
         gameBoard.resetBoard();
         setTeamTurn(TeamColor.WHITE);
+        resignationStatus = false;
+    }
+
+    public boolean getResignationStatus(){
+        return resignationStatus;
     }
 
     /**
@@ -83,6 +89,9 @@ public class ChessGame {
      * @throws InvalidMoveException if move is invalid
      */
     public void makeMove(ChessMove move) throws InvalidMoveException {
+        if (resignationStatus) {
+            throw new InvalidMoveException("Unable to make move. A player has resigned");
+        }
         ChessPiece movingPiece = gameBoard.getPiece(move.getStartPosition());
         if (movingPiece == null) {
             throw new InvalidMoveException();
@@ -98,6 +107,14 @@ public class ChessGame {
             setTeamTurn(currentTurn == TeamColor.WHITE ? TeamColor.BLACK : TeamColor.WHITE);
         } else {
             throw new InvalidMoveException();
+        }
+    }
+
+    public void resign(TeamColor teamColor) throws InvalidMoveException {
+        if (currentTurn != teamColor) {
+            throw new InvalidMoveException("Can't resign during another player's turn");
+        } else {
+            resignationStatus = true;
         }
     }
 
