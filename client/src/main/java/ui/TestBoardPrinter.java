@@ -18,11 +18,12 @@ public class TestBoardPrinter {
             throw new RuntimeException(e);
         }
         ChessBoard newBoard = game.getBoard();
-        var changed = printer.highlightBoardDifferences(origBoard,newBoard);
-        printer.renderBoard(changed, ChessGame.TeamColor.WHITE);
         System.out.println();
         highlighted = printer.highlightLegalMoves(game,new ChessPosition(2,2));
         printer.renderBoard(highlighted, ChessGame.TeamColor.WHITE);
         System.out.println();
+        ChessGame game1 = new ChessGame();
+        var changedBoardRep = printer.highlightMove(game1,new ChessMove(new ChessPosition(2,1),new ChessPosition(4,1),null));
+        printer.renderBoard(changedBoardRep, ChessGame.TeamColor.WHITE);
     }
 }

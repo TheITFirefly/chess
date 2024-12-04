@@ -1,7 +1,6 @@
 package ui;
 
 import java.util.Collection;
-import java.util.Objects;
 
 import chess.*;
 
@@ -100,7 +99,7 @@ public class BoardPrinter {
         }
         output.append(EscapeSequences.EMPTY_BORDER_SQUARE).append("\n");
 
-        System.out.print(output.toString());
+        System.out.print(output);
     }
 
     private String renderPiece(ChessPiece piece, boolean isDarkSquare) {
@@ -170,30 +169,17 @@ public class BoardPrinter {
         return rowInBounds && colInBounds;
     }
 
-    public String[][] highlightBoardDifferences(ChessBoard startBoard, ChessBoard endBoard) {
-        boolean[][] pieceChanged = new boolean[8][8];
-        String[][] retBoardRep = new String[8][8];
-        String[][] startBoardRep = importBoard(startBoard);
-        String[][] endBoardRep = importBoard(endBoard);
-
-        for (int row = 0; row <= 7; row++) {
-            for (int col = 0; col <= 7; col++) {
-                pieceChanged[row][col] = !Objects.equals(startBoardRep[row][col], endBoardRep[row][col]);
-            }
-        }
-
-        for (int row = 0; row <= 7; row++) {
-            for (int col = 0; col <= 7; col++) {
-                boolean changed = pieceChanged[row][col];
-                if (changed) {
-                    ChessPiece piece = endBoard.getPiece(new ChessPosition(row+1,col+1));
-                    retBoardRep[row][col] = renderChangedPiece(piece);
-                } else {
-                    retBoardRep[row][col] = endBoardRep[row][col];
-                }
-            }
-        }
-
+    public String[][] highlightMove(ChessGame game,ChessMove madeMove) {
+        String[][] retBoardRep = highlightLegalMoves(game,new ChessPosition(9,9));
+        var startRow = madeMove.getStartPosition().getRow()-1;
+        var startCol = madeMove.getStartPosition().getColumn()-1;
+        var endRow = madeMove.getEndPosition().getRow()-1;
+        var endCol = madeMove.getEndPosition().getColumn()-1;
+        var board = game.getBoard();
+        var startPiece = board.getPiece(madeMove.getStartPosition());
+        var endPiece = board.getPiece(madeMove.getEndPosition());
+        retBoardRep[startRow][startCol] = renderChangedPiece(startPiece);
+        retBoardRep[endRow][endCol] = renderChangedPiece(endPiece);
         return retBoardRep;
     }
 
