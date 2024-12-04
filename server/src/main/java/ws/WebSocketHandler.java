@@ -19,7 +19,6 @@ import websocket.commands.UserGameCommand;
 import websocket.messages.ErrorMessage;
 import websocket.messages.LoadGameMessage;
 import websocket.messages.NotificationMessage;
-import websocket.messages.ServerMessage;
 
 import java.util.Objects;
 
@@ -83,7 +82,7 @@ public class WebSocketHandler {
             connectionManager.sendMessage(session, loadGameJson);
 
             // Send NOTIFICATION message to other clients
-            broadcastNotification(gameID, key, key.getRole() + " player " + key.getAuthToken() + " connected.");
+            broadcastNotification(gameID, key, key.getRole() + " player " + key.getUsername() + " connected.");
 
             System.out.println("Connected: " + key);
         } catch (AuthNotFoundException e) {
@@ -212,7 +211,7 @@ public class WebSocketHandler {
             String leaveMessage = leavingPlayer + " (" + authToken + ") has left the game.";
             broadcastNotification(gameID, key, leaveMessage);
 
-            System.out.println("User left: " + key);
+            System.out.println("User left: " + key.getUsername());
         } catch (AuthNotFoundException e) {
             ErrorMessage errorMessage = new ErrorMessage("Error: Bad authentication");
             String errorMessageJson = gson.toJson(errorMessage);
@@ -294,15 +293,16 @@ public class WebSocketHandler {
         String username;
         try {
             AuthData auth = authDAO.getAuth(authToken);
-            if (auth == null) {throw new AuthNotFoundException("No auth exists");}
-            username = auth.username();
+            if (auth == null) {
+                throw new AuthNotFoundException("No auth exists");
+            }
+            username = auth.username(); // Use username instead of authToken
         } catch (DataAccessException e) {
             throw new AuthNotFoundException(e.getMessage());
         }
-        System.out.println("Username: "+username);
 
         GameData gameData;
-        try{
+        try {
             gameData = gameDAO.getGame(gameID);
         } catch (DataAccessException e) {
             throw new GameNotFoundException(e.getMessage());
@@ -310,6 +310,7 @@ public class WebSocketHandler {
         if (gameData == null) {
             throw new GameNotFoundException("Error: couldn't find game");
         }
+
         SessionKey.Role role;
         if (Objects.equals(username, gameData.whiteUsername())) {
             role = SessionKey.Role.WHITE;
@@ -318,8 +319,9 @@ public class WebSocketHandler {
         } else {
             role = SessionKey.Role.OBSERVER;
         }
-        return new SessionKey(role,gameID,authToken);
+        return new SessionKey(role, gameID, username); // Pass username instead of authToken
     }
+
 
     private void broadcastNotification(Integer gameID, SessionKey senderKey, String messageContent) {
         // Construct the NOTIFICATION message

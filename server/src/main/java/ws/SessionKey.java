@@ -9,12 +9,12 @@ public class SessionKey {
 
     private final Role role;
     private final Integer gameID;
-    private final String authToken;
+    private final String username;
 
-    public SessionKey(Role role, Integer gameID, String authToken) {
+    public SessionKey(Role role, Integer gameID, String username) {
         this.role = role;
         this.gameID = gameID;
-        this.authToken = authToken;
+        this.username = username;
     }
 
     public Role getRole() {
@@ -25,8 +25,8 @@ public class SessionKey {
         return gameID;
     }
 
-    public String getAuthToken() {
-        return authToken;
+    public String getUsername() {
+        return username;
     }
 
     @Override
@@ -36,12 +36,12 @@ public class SessionKey {
         SessionKey that = (SessionKey) o;
         return role == that.role &&
                 Objects.equals(gameID, that.gameID) &&
-                Objects.equals(authToken, that.authToken);
+                Objects.equals(username, that.username);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(role, gameID, authToken);
+        return Objects.hash(role, gameID, username);
     }
 
     @Override
@@ -49,7 +49,7 @@ public class SessionKey {
         return "SessionKey{" +
                 "role=" + role +
                 ", gameID=" + gameID +
-                ", authToken='" + authToken + '\'' +
+                ", authToken='" + username + '\'' +
                 '}';
     }
 }
