@@ -1,0 +1,9 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Server Main" type="Application" factoryName="Application" folderName="Manual Client">
+    <option name="MAIN_CLASS_NAME" value="Main" />
+    <module name="server" />
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>
