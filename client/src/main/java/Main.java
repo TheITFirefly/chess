@@ -2,11 +2,9 @@ import java.util.Scanner;
 
 import chess.*;
 import facade.ServerFacade;
-import ui.PreLoginREPL;
+import repl.PreLoginREPL;
 
 public class Main {
-
-
     public static void main(String[] args) {
         var piece = new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.PAWN);
         System.out.println("♕ 240 Chess Client: " + piece);

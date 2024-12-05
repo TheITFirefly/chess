@@ -91,7 +91,7 @@ public class HttpCommunicator {
     }
 
     public ListGamesResponse listGames(ListGamesRequest listGamesRequest) {
-        // Make the GET request to the /game endpoint with the authToken
+        // Make the GET request to the /currentGame endpoint with the authToken
         HttpResponse<String> response = null;
         try {
             response = makeWebRequest("GET", "/game", null, listGamesRequest.authToken());
@@ -116,7 +116,7 @@ public class HttpCommunicator {
         // Convert the CreateGameRequest object to JSON
         String jsonBody = gson.toJson(createGameRequest);
 
-        // Make the POST request to the /game endpoint with the authToken
+        // Make the POST request to the /currentGame endpoint with the authToken
         HttpResponse<String> response = null;
         try {
             response = makeWebRequest("POST", "/game", jsonBody, createGameRequest.authToken());
@@ -142,7 +142,7 @@ public class HttpCommunicator {
         // Convert the JoinGameRequest object to JSON
         String jsonBody = gson.toJson(joinGameRequest);
 
-        // Make the PUT request to the /game endpoint with the authToken
+        // Make the PUT request to the /currentGame endpoint with the authToken
         HttpResponse<String> response = null;
         try {
             response = makeWebRequest("PUT", "/game", jsonBody, joinGameRequest.authToken());

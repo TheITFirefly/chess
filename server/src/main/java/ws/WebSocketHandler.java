@@ -77,7 +77,7 @@ public class WebSocketHandler {
                 return;
             }
             connectionManager.addConnection(key, session);
-            LoadGameMessage loadGameMessage = new LoadGameMessage(game);
+            LoadGameMessage loadGameMessage = new LoadGameMessage(game,null);
             String loadGameJson = gson.toJson(loadGameMessage);
             connectionManager.sendMessage(session, loadGameJson);
 
@@ -143,8 +143,20 @@ public class WebSocketHandler {
             game.makeMove(move);
             GameData updatedGame = new GameData(gameID, gameData.whiteUsername(), gameData.blackUsername(),gameData.gameName(),game);
             gameDAO.updateGame(updatedGame);
-            broadcastLoadGame(gameID,game);
-            broadcastNotification(gameID,key,"A move was just made");
+            broadcastLoadGame(gameID,game,move);
+            if (game.isInCheckmate(ChessGame.TeamColor.WHITE)){
+                broadcastNotification(gameID,key,"A move was made. Checkmate: Black wins");
+            } else if (game.isInCheckmate(ChessGame.TeamColor.BLACK)) {
+                broadcastNotification(gameID,key,"A move was made. Checkmate: White wins");
+            } else if (game.isInCheck(ChessGame.TeamColor.WHITE)) {
+                broadcastNotification(gameID,key,"A move was made. White is in check");
+            } else if (game.isInCheck(ChessGame.TeamColor.BLACK)) {
+                broadcastNotification(gameID,key,"A move was made. Black is in check");
+            } else if (game.isInStalemate(ChessGame.TeamColor.WHITE) || game.isInStalemate(ChessGame.TeamColor.BLACK)) {
+                broadcastNotification(gameID,key,"A move was made. Stalemate: Game tied");
+            } else {
+                broadcastNotification(gameID,key,"A move was made");
+            }
         } catch (AuthNotFoundException e) {
             ErrorMessage errorMessage = new ErrorMessage("Error: Bad authentication");
             String errorMessageJson = gson.toJson(errorMessage);
@@ -208,7 +220,7 @@ public class WebSocketHandler {
                 leavingPlayer = "Observer";
             }
 
-            String leaveMessage = leavingPlayer + " (" + authToken + ") has left the game.";
+            String leaveMessage = leavingPlayer + " (" + key.getUsername() + ") has left the game.";
             broadcastNotification(gameID, key, leaveMessage);
 
             System.out.println("User left: " + key.getUsername());
@@ -336,8 +348,8 @@ public class WebSocketHandler {
         });
     }
 
-    private void broadcastLoadGame(Integer gameID, ChessGame messageContent) {
-        LoadGameMessage loadGameMessage = new LoadGameMessage(messageContent);
+    private void broadcastLoadGame(Integer gameID, ChessGame messageContent, ChessMove madeMove) {
+        LoadGameMessage loadGameMessage = new LoadGameMessage(messageContent,madeMove);
         String notificationJson = gson.toJson(loadGameMessage);
         connectionManager.getConnections().forEach((key, session) -> {
             if (key.getGameID().equals(gameID)) {

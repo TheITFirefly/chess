@@ -49,7 +49,7 @@ public class SessionKey {
         return "SessionKey{" +
                 "role=" + role +
                 ", gameID=" + gameID +
-                ", authToken='" + username + '\'' +
+                ", username='" + username + '\'' +
                 '}';
     }
 }

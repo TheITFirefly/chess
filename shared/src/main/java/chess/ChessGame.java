@@ -25,6 +25,10 @@ public class ChessGame {
         return resignationStatus;
     }
 
+    public void setResignationStatus(boolean status){
+        resignationStatus = status;
+    }
+
     /**
      * @return Which team's turn it is
      */
@@ -89,21 +93,30 @@ public class ChessGame {
      * @throws InvalidMoveException if move is invalid
      */
     public void makeMove(ChessMove move) throws InvalidMoveException {
+        // System.out.print(gameBoard); // Debug statement
+        if (isInCheckmate(TeamColor.WHITE)) {
+            throw new InvalidMoveException("Cannot make move. White is in checkmate");
+        } else if (isInCheckmate(TeamColor.BLACK)) {
+            throw new InvalidMoveException("Cannot make move. Black is in checkmate");
+        }
         ChessPiece movingPiece = gameBoard.getPiece(move.getStartPosition());
         if (movingPiece == null) {
-            throw new InvalidMoveException();
+            throw new InvalidMoveException("No piece at position "+move.getStartPosition());
         } else if (movingPiece.getTeamColor() != currentTurn) {
-            throw new InvalidMoveException();
+            throw new InvalidMoveException("Current turn doesn't match moved piece");
         }
         // Get all good moves
         // Move it with movePiece if the move is in good moves for the start position
         // Else throw an exception
         Collection<ChessMove> validMoves = validMoves(move.getStartPosition());
-        if (validMoves != null && validMoves.contains(move)) {
+        if (validMoves == null) {
+            throw new InvalidMoveException("No valid moves for piece at position "+move.getStartPosition());
+        }
+        if (validMoves.contains(move)) {
             gameBoard.movePiece(move);
             setTeamTurn(currentTurn == TeamColor.WHITE ? TeamColor.BLACK : TeamColor.WHITE);
         } else {
-            throw new InvalidMoveException();
+            throw new InvalidMoveException("Move invalid: Promotion piece was set to an unexpected value");
         }
     }
 

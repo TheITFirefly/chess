@@ -1,12 +1,16 @@
 package facade;
 
+import chess.ChessGame;
 import client.request.*;
 import client.response.*;
-import facade.communicator.HttpCommunicator;
+import facade.communicator.*;
+import websocket.commands.UserGameCommand;
 
 public class ServerFacade {
     private String serverAddress = "localhost";
     private int port = 8080;
+    WebSocketCommunicator ws;
+    ChessGame.TeamColor playerColor;
 
     public ServerFacade() {}
 
@@ -46,5 +50,22 @@ public class ServerFacade {
     public JoinGameResponse joinGame(JoinGameRequest joinGameRequest) {
         HttpCommunicator httpCommunicator = new HttpCommunicator(serverAddress,port);
         return httpCommunicator.joinGame(joinGameRequest);
+    }
+
+    public void sendMessage(UserGameCommand command){
+        ws.send(command);
+    }
+
+
+    public void printBoard(ChessGame.TeamColor playerColor) {
+        ws.printBoard(playerColor);
+    }
+
+    public void openWebsocket() {
+        ws = new WebSocketCommunicator(serverAddress,port,playerColor);
+    }
+
+    public void setPlayerColor(ChessGame.TeamColor playerColor) {
+        this.playerColor = playerColor;
     }
 }

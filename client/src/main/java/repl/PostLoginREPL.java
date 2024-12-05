@@ -1,4 +1,4 @@
-package ui;
+package repl;
 
 import client.request.CreateGameRequest;
 import client.request.JoinGameRequest;
@@ -10,6 +10,7 @@ import client.response.ListGamesResponse;
 import client.response.LogoutResponse;
 import facade.ServerFacade;
 import model.GameData;
+import websocket.messages.ServerMessage;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -134,7 +135,7 @@ public class PostLoginREPL {
 
         if (joinGameResponse.success()) {
             System.out.println("Successfully joined game " + selectedGame.gameName() + " as " + color + ".");
-            new GameplayREPL(facade,authToken,selectedGame.game(),color).run();
+            new GameplayREPL(facade,authToken,selectedGame.gameID(),color).run();
         } else {
             System.out.println("Failed to join game: " + joinGameResponse.errorMessage());
         }
