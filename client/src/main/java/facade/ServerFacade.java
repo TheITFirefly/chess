@@ -1,6 +1,8 @@
 package facade;
 
 import chess.ChessGame;
+import chess.ChessPiece;
+import chess.ChessPosition;
 import client.request.*;
 import client.response.*;
 import facade.communicator.*;
@@ -58,7 +60,11 @@ public class ServerFacade {
 
 
     public void printBoard(ChessGame.TeamColor playerColor) {
-        ws.printBoard(playerColor);
+        ws.highlightBoard(playerColor, null);
+    }
+
+    public void highlightBoard(ChessGame.TeamColor playerColor, ChessPosition position){
+        ws.highlightBoard(playerColor,position);
     }
 
     public void openWebsocket() {

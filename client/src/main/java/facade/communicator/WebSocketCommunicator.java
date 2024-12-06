@@ -69,13 +69,23 @@ public class WebSocketCommunicator extends Endpoint {
         }
     }
 
-    public void printBoard(ChessGame.TeamColor playerColor) {
+    public void highlightBoard(ChessGame.TeamColor playerColor, ChessPosition position) {
         System.out.println();
         if (currentGame == null) {
             var game = new ChessGame();
+            if (position != null) {
+                var boardRep = boardPrinter.highlightLegalMoves(game,position);
+                boardPrinter.renderBoard(boardRep,playerColor);
+                return;
+            }
             var boardRep = boardPrinter.highlightLegalMoves(game,new ChessPosition(9,9));
             boardPrinter.renderBoard(boardRep, playerColor);
         } else {
+            if (position != null) {
+                var boardRep = boardPrinter.highlightLegalMoves(currentGame,position);
+                boardPrinter.renderBoard(boardRep,playerColor);
+                return;
+            }
             var boardRep = boardPrinter.highlightLegalMoves(currentGame,new ChessPosition(9,9));
             boardPrinter.renderBoard(boardRep, playerColor);
         }

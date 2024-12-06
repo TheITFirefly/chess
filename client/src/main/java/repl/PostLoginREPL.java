@@ -142,7 +142,27 @@ public class PostLoginREPL {
     }
 
     private void handleObserveGame(Scanner scanner) {
-        System.out.println("Observe functionality is not yet implemented.");
-        // Placeholder for future implementation
+        if (gamesList.isEmpty()) {
+            System.out.println("No games listed. Use the 'list' command first.");
+            return;
+        }
+
+        System.out.print("Enter the number of the game to observe: ");
+        int gameNumber;
+        try {
+            gameNumber = Integer.parseInt(scanner.nextLine().trim());
+        } catch (NumberFormatException e) {
+            gameNumber = 0;
+        }
+
+        if (gameNumber < 1 || gameNumber > gamesList.size()) {
+            System.out.println("Invalid game number.");
+            return;
+        }
+
+        GameData selectedGame = gamesList.get(gameNumber - 1);
+
+        System.out.println("Observing game: " + selectedGame.gameName());
+        new ObserveREPL(facade, authToken, selectedGame.gameID(), null).run();
     }
 }

@@ -80,7 +80,11 @@ public class GameplayREPL {
                     }
                     break;
                 case "HIGHLIGHT":
-                    System.out.print("Enter the piece positionString to highlight (e.g., 'e2'): ");
+                    System.out.print("Enter the piece position to highlight (e.g. 'e2'): ");
+                    String positionInput = scanner.nextLine().trim();
+                    ChessPosition position = parseChessPosition(positionInput);
+                    facade.highlightBoard(this.playerColor, position);
+                    System.out.println("Highlighting moves for piece at: " + positionInput);
                     break;
                 default:
                     System.out.println("Invalid command. Type HELP for a list of commands.");
