@@ -29,7 +29,7 @@ public class ObserveREPL {
         Scanner scanner = new Scanner(System.in);
         boolean running = true;
         while (running) {
-            System.out.print("Enter a command: ");
+            System.out.print("Enter a command: (help, redraw, highlight, leave)");
             String command = scanner.nextLine().trim().toUpperCase();
 
             switch (command) {
