@@ -76,7 +76,6 @@ public class GameplayREPL {
                     if (scanner.nextLine().trim().equalsIgnoreCase("yes")) {
                         facade.sendMessage(new UserGameCommand(UserGameCommand.CommandType.RESIGN, authToken, gameID));
                         System.out.println("You have resigned.");
-                        running = false;
                     }
                     break;
                 case "HIGHLIGHT":

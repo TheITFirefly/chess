@@ -41,7 +41,6 @@ public class ObserveREPL {
                     break;
                 case "LEAVE":
                     facade.sendMessage(new UserGameCommand(UserGameCommand.CommandType.LEAVE, authToken, gameID));
-                    running = false; // Exit the loop
                     break;
                 case "HIGHLIGHT":
                     System.out.print("Enter the piece position to highlight (e.g., 'e2'): ");

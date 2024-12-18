@@ -146,14 +146,19 @@ public class WebSocketHandler {
             broadcastLoadGame(gameID,game,move);
             if (game.isInCheckmate(ChessGame.TeamColor.WHITE)){
                 broadcastNotification(gameID,key,"A move was made. Checkmate: Black wins");
+                connectionManager.sendMessage(session,gson.toJson(new NotificationMessage("A move was made. Checkmate: Black wins")));
             } else if (game.isInCheckmate(ChessGame.TeamColor.BLACK)) {
                 broadcastNotification(gameID,key,"A move was made. Checkmate: White wins");
+                connectionManager.sendMessage(session,gson.toJson(new NotificationMessage("A move was made. Checkmate: White wins")));
             } else if (game.isInCheck(ChessGame.TeamColor.WHITE)) {
                 broadcastNotification(gameID,key,"A move was made. White is in check");
+                connectionManager.sendMessage(session,gson.toJson(new NotificationMessage("A move was made. White is in check")));
             } else if (game.isInCheck(ChessGame.TeamColor.BLACK)) {
                 broadcastNotification(gameID,key,"A move was made. Black is in check");
+                connectionManager.sendMessage(session,gson.toJson(new NotificationMessage("A move was made. Black is in check")));
             } else if (game.isInStalemate(ChessGame.TeamColor.WHITE) || game.isInStalemate(ChessGame.TeamColor.BLACK)) {
                 broadcastNotification(gameID,key,"A move was made. Stalemate: Game tied");
+                connectionManager.sendMessage(session,gson.toJson(new NotificationMessage("A move was made. Stalemate: Game tied")));
             } else {
                 broadcastNotification(gameID,key,"A move was made");
             }

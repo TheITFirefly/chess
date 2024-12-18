@@ -116,7 +116,10 @@ public class ChessGame {
             gameBoard.movePiece(move);
             setTeamTurn(currentTurn == TeamColor.WHITE ? TeamColor.BLACK : TeamColor.WHITE);
         } else {
-            throw new InvalidMoveException("Move invalid: Promotion piece was set to an unexpected value");
+            if (move.getPromotionPiece() ==null) {
+                throw new InvalidMoveException("Move invalid: Promotion piece was set when it shouldn't have been");
+            }
+            throw new InvalidMoveException("Move invalid");
         }
     }
 
